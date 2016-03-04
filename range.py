@@ -206,13 +206,15 @@ class Future (Past):
         self.date_ini=start_date
         self.date_fi=end_date
 
-        self.days_list=[]
-        self.days_list_done=[]
+        self.present_days_list=[]
+        self.present_days_list_done=[]
 
-        self.set_days_list()
+        self.past_days_list=[]
+
+        self.set_present_and_past_days_list()
 
 
-    def set_days_list(self):
+    def set_present_and_past_days_list(self):
         un_dia = timedelta(days=1)
 
         self.days_list = []
@@ -224,10 +226,22 @@ class Future (Past):
 #        ("GRAN: {}".format(perfil_gran))
 
         while dia <= self.date_fi:
+            #Set the present day
             logger.info(" - {}".format(dia))
-            bisect.insort(self.days_list, dia)
+            bisect.insort(self.present_days_list, dia)
+
+            #Set the pass day
+            past_day=self.get_past_day(dia)
+            bisect.insort(self.past_days_list, past_day)
+
             dia += un_dia
 
+
+
+
+    def get_past_day(self, day):
+        #Interact with one_year_ago to reach the related past day
+        return day
 
 
 past = Past()
