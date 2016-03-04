@@ -1,0 +1,11 @@
+.idea
+*.pyc
+*.swp
+a.py*
+test.py
+build/*
+*egg-info*
+setup.cfg
+kidd*
+electrical_calendar/*
+one_year_ago/*
