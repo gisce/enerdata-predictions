@@ -28,6 +28,72 @@ fitx='lectures.txt'
 from one_year_ago.one_year_ago import *
 from datetime import datetime, timedelta, date
 
+
+class Prediction():
+    past_cups = []  #list of [cup, Past]
+    future_cups = [] #list of [cup, Past]
+
+    total_consumption = 0
+    count = 0
+
+
+    def importData(self):
+        self.parseFile()
+
+    def parseFile(self):
+        f=open(fitx, 'rb')
+        a = DictReader(f,delimiter=';')
+        count=0
+
+        for row in a:
+            past_cup = Past()
+            count+=1
+            if count>2:
+                break
+            #print row
+            data_anterior = datetime.strptime(row['data_anterior'], '%Y-%m-%d')
+            data_lectura = datetime.strptime(row['data_mesura'], '%Y-%m-%d')
+
+            print '{} {}kw {} {}'.format(row['cups'], data_anterior.strftime("%d/%m/%Y"), data_lectura.strftime("%d/%m/%Y"), row['consum'])
+
+
+            ## todo ISSUE enerdata tema mes actual
+            ## El mes actual encara no esta disponible
+            ## http://www.ree.es/sites/default/files/simel/perff/PERFF_201602.gz
+            if 1 or (mes_actual - data_lectura).total_seconds() > 0:
+                try:
+                    past_cup.range_process(row)
+
+                    #print colored("[!] OK", 'green'), " :: {}  {}".format(row,sys.exc_info())
+                except:
+                    raise
+                    #print colored("[!] ERROR", 'red'), " :: {}  {}\n".format(row,sys.exc_info())
+            else:
+                print colored("[!] WARNING", 'yellow'), " :: No hi ha dades pel mes {}.\n".format(mes_actual.month)
+
+            bisect.insort(self.past_cups,[past_cup.cups, past_cup])
+
+
+
+    def predict(self, start_date, end_date, cups_list=None):
+
+        # todo filter cups list - currently bypassed to analyze all CUPS
+        if 0 and cups_list:
+            for cups in cups_list:
+                past = bisect.bisect(self.past_cups, cups)
+                future = Future(past, datetime(2016,10,25), datetime(2016,10,27))
+        else:
+            logger.info("Start prediction for all Past CUPS bewteen {} - {}".format(start_date, end_date))
+
+            for past in self.past_cups:
+                future = Future(past[1], start_date, end_date)
+                self.total_consumption += future.profile.total_consumption
+
+        logger.info("Predicted TOTAL consumption of {} kw between {} - {} based on the last year info".format(self.total_consumption, start_date, end_date))
+
+
+
+
 class Past():
 
     cups = None
@@ -143,87 +209,29 @@ class Past():
 
 
 
-    def parseFile(self):
-        f=open(fitx, 'rb')
-        a = DictReader(f,delimiter=';')
-        count=0
-
-        for row in a:
-            count+=1
-            if count>2:
-                break
-            #print row
-            data_anterior = datetime.strptime(row['data_anterior'], '%Y-%m-%d')
-            data_lectura = datetime.strptime(row['data_mesura'], '%Y-%m-%d')
-
-            print '{} {}kw {} {}'.format(row['cups'], data_anterior.strftime("%d/%m/%Y"), data_lectura.strftime("%d/%m/%Y"), row['consum'])
-
-
-            ## todo ISSUE enerdata tema mes actual
-            ## El mes actual encara no esta disponible
-            ## http://www.ree.es/sites/default/files/simel/perff/PERFF_201602.gz
-            if 1 or (mes_actual - data_lectura).total_seconds() > 0:
-                try:
-                    self.range_process(row)
-
-                    #print colored("[!] OK", 'green'), " :: {}  {}".format(row,sys.exc_info())
-                except:
-                    raise
-                    #print colored("[!] ERROR", 'red'), " :: {}  {}\n".format(row,sys.exc_info())
-            else:
-                print colored("[!] WARNING", 'yellow'), " :: No hi ha dades pel mes {}.\n".format(mes_actual.month)
-
-
-
-
-
-
-    def testme(self):
-        #logging.basicConfig(level=logging.DEBUG)
-
-
-        dia=datetime(2016,1 ,1) # !is_working, is_holiday
-        dia=datetime(2016,5,1) # !is_working, is_holiday
-        dia=datetime(2016,2,29) # is_working, !is_holiday
-        dia=datetime(2016,3,25) # is_working, !is_holiday
-
-
-        #if ree_cal.is_holiday(dia):
-         #   print dia
-
-        fa_un_any = OneYearAgo(dia)
-
-        #fa_un_any.get_one_year_ago()
-
-        #fa_un_any.get_year_ago(yearsago=2)
-
 
 
 class Future (Past):
 
-
-
-    def __init__(self, past, start_date, end_date, cups_list=None):
+    def __init__(self, past, start_date, end_date):
         self.past=past
 
         self.date_ini=start_date
         self.date_fi=end_date
+
+        self.cups = past.cups
 
         self.present_days_list=[]
         self.present_days_list_done=[]
 
         self.past_days_list=[]
 
-        if not cups_list: #assume cups on future are the same than past
-            cups_list =
-
-
         logger.info( "Present days: {}".format(self.present_days_list))
         logger.info("Past days: {}".format(self.past_days_list))
 
         self.project_past_to_future()
 
-        logger.info("Predicted consumption of {} kw between {} - {} based on the last year info".format(self.profile.total_consumption, start_date, end_date))
+        logger.info("Predicted consumption of {} kw for CUPS {} between {} - {} based on the last year info".format(self.profile.total_consumption, self.cups.number, start_date, end_date))
 
 
     # todo -> add correctional factors
@@ -264,7 +272,7 @@ class Future (Past):
 
             ## todo canviar data interna de la mesura (segueix sent la vella encara)
 
-            mesures_dia_passat = past.profile_per_day[dia_passat][1]
+            mesures_dia_passat = self.past.profile_per_day[dia_passat][1]
 
             #bisect.insort(self.profile.measures, mesures_dia_passat)
 
@@ -293,14 +301,16 @@ class Future (Past):
         return OneYearAgo(day).day_year_ago
 
 
-past = Past()
+
 
 logging.basicConfig(level=logging.INFO)
 
-past.parseFile()
 
-p=Profile(TIMEZONE.localize(datetime(2018,10,2)),TIMEZONE.localize(datetime(2018,10,26)), [])
+prediction = Prediction()
+prediction.parseFile()
 
 cups_list = ["ES0031406178012015XD0F"]
 
-future = Future(past, datetime(2016,10,25), datetime(2016,10,27), cups_list)
+prediction.predict(datetime(2016,10,25), datetime(2016,10,27), cups_list)
+
+
