@@ -203,7 +203,7 @@ class Future (Past):
 
 
 
-    def __init__(self, past, start_date=None, end_date=None):
+    def __init__(self, past, start_date, end_date, cups_list=None):
         self.past=past
 
         self.date_ini=start_date
@@ -213,6 +213,10 @@ class Future (Past):
         self.present_days_list_done=[]
 
         self.past_days_list=[]
+
+        if not cups_list: #assume cups on future are the same than past
+            cups_list =
+
 
         logger.info( "Present days: {}".format(self.present_days_list))
         logger.info("Past days: {}".format(self.past_days_list))
@@ -266,7 +270,7 @@ class Future (Past):
 
             self.profile.measures.extend(mesures_dia_passat.measures)
 
-            logger.info(" - Adding day_measurements {} for day: {}".format(mesures_dia_passat.measures, dia))
+            logger.info(" - Adding day_measurements for day: {} [{} kw] -> {} ".format(dia, mesures_dia_passat.total_consumption, mesures_dia_passat.measures))
 
 
             #Set the day to future
@@ -297,4 +301,6 @@ past.parseFile()
 
 p=Profile(TIMEZONE.localize(datetime(2018,10,2)),TIMEZONE.localize(datetime(2018,10,26)), [])
 
-future = Future(past, datetime(2016,10,25), datetime(2016,10,27))
+cups_list = ["ES0031406178012015XD0F"]
+
+future = Future(past, datetime(2016,10,25), datetime(2016,10,27), cups_list)
