@@ -133,7 +133,8 @@ class Past():
         #print self.estimation_summary()
         logger.info(self.estimation_summary())
 
-        self.profile_cut_by_date(self.profile)
+        #create a profile for each day
+        self.profile_per_day = self.profile_cut_by_date(self.profile)
 
 
 
@@ -200,6 +201,8 @@ class Past():
 
 class Future (Past):
 
+
+
     def __init__(self, past, start_date=None, end_date=None):
         self.past=past
 
@@ -211,19 +214,20 @@ class Future (Past):
 
         self.past_days_list=[]
 
-        self.set_present_and_past_days_list()
+        self.project_past_to_future()
 
         logger.info( "Present days: {}".format(self.present_days_list))
         logger.info("Past days: {}".format(self.past_days_list))
 
         self.set_future_from_past()
 
+    # todo -> add correctional factors
     def set_future_from_past(self):
         "Project past values to future"
-        pass
 
 
-    def set_present_and_past_days_list(self):
+
+    def project_past_to_future(self):
         un_dia = timedelta(days=1)
 
         self.days_list = []
@@ -239,9 +243,14 @@ class Future (Past):
             logger.info(" - {}".format(dia))
             bisect.insort(self.present_days_list, dia)
 
-            #Set the pass day
+            #Set the past day
             past_day=self.get_past_day(dia)
             bisect.insort(self.past_days_list, past_day)
+
+
+
+            self.usage_sum += 5
+            self.count += 1
 
             dia += un_dia
 
@@ -255,14 +264,22 @@ class Future (Past):
         :param day:
         :return: past_day
         """
-
         return OneYearAgo(day).day_year_ago
 
 
 past = Past()
 
+logging.basicConfig(level=logging.INFO)
+
 past.parseFile()
 
-logging.basicConfig(level=logging.INFO)
+p=Profile(TIMEZONE.localize(datetime(2016,10,25)),TIMEZONE.localize(datetime(2016,10,26)), [])
+
+## Past ha de ser llista de llistes per poder bisectejar
+print bisect.bisect(past.profile_per_day, p)
+
+print past.profile_per_day
+
+exit()
 
 future = Future(past, datetime(2016,10,25), datetime(2016,10,26))
