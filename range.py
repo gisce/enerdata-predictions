@@ -213,6 +213,15 @@ class Future (Past):
 
         self.set_present_and_past_days_list()
 
+        logger.info( "Present days: {}".format(self.present_days_list))
+        logger.info("Past days: {}".format(self.past_days_list))
+
+        self.set_future_from_past()
+
+    def set_future_from_past(self):
+        "Project past values to future"
+        pass
+
 
     def set_present_and_past_days_list(self):
         un_dia = timedelta(days=1)
@@ -240,8 +249,14 @@ class Future (Past):
 
 
     def get_past_day(self, day):
-        #Interact with one_year_ago to reach the related past day
-        return day
+        """
+        Interact with one_year_ago to reach the related past day
+
+        :param day:
+        :return: past_day
+        """
+
+        return OneYearAgo(day).day_year_ago
 
 
 past = Past()
@@ -250,4 +265,4 @@ past.parseFile()
 
 logging.basicConfig(level=logging.INFO)
 
-future = Future(past, datetime(2015,10,25), datetime(2015,10,26))
+future = Future(past, datetime(2016,10,25), datetime(2016,10,26))
