@@ -199,14 +199,41 @@ class Past():
 
 
 class Future (Past):
-    pass
+
+    def __init__(self, past, start_date=None, end_date=None):
+        self.past=past
+
+        self.date_ini=start_date
+        self.date_fi=end_date
+
+        self.days_list=[]
+        self.days_list_done=[]
+
+        self.set_days_list()
 
 
+    def set_days_list(self):
+        un_dia = timedelta(days=1)
 
-logging.basicConfig(level=logging.INFO)
+        self.days_list = []
+
+        dia = self.date_ini
+
+        logger.info ("Setting days list for {} - {}".format(dia, self.date_fi))
+
+#        ("GRAN: {}".format(perfil_gran))
+
+        while dia <= self.date_fi:
+            logger.info(" - {}".format(dia))
+            bisect.insort(self.days_list, dia)
+            dia += un_dia
+
+
 
 past = Past()
 
 past.parseFile()
 
-future = Future()
+logging.basicConfig(level=logging.INFO)
+
+future = Future(past, datetime(2015,10,25), datetime(2015,10,26))
