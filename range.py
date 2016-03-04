@@ -109,7 +109,7 @@ class Past():
 
             logger.info( "  - {} {}".format(perfil_dia.start_date, perfil_dia.total_consumption))
             dia += un_dia
-            bisect.insort(perfils_dia_llista, perfil_dia)
+            bisect.insort(perfils_dia_llista, [dia, perfil_dia])
 
         return perfils_dia_llista
 
@@ -214,19 +214,15 @@ class Future (Past):
 
         self.past_days_list=[]
 
-        self.project_past_to_future()
-
         logger.info( "Present days: {}".format(self.present_days_list))
         logger.info("Past days: {}".format(self.past_days_list))
 
-        self.set_future_from_past()
+        self.project_past_to_future()
+
+        logger.info("Predicted consumption of {} kw between {} - {} based on the last year info".format(self.profile.total_consumption, start_date, end_date))
+
 
     # todo -> add correctional factors
-    def set_future_from_past(self):
-        "Project past values to future"
-
-
-
     def project_past_to_future(self):
         un_dia = timedelta(days=1)
 
@@ -238,18 +234,44 @@ class Future (Past):
 
 #        ("GRAN: {}".format(perfil_gran))
 
+
+        self.profile = Profile(TIMEZONE.localize(dia),TIMEZONE.localize(self.date_fi),[])
+
+        logger.info ("Creating projected profile: {} ".format(self.profile))
+
+
         while dia <= self.date_fi:
             #Set the present day
-            logger.info(" - {}".format(dia))
+
+            dia = (dia)
+
+            dia_localized=TIMEZONE.localize(dia)
+
             bisect.insort(self.present_days_list, dia)
 
             #Set the past day
-            past_day=self.get_past_day(dia)
+            past_day=self.get_past_day(dia_localized)
+            past_day_localized = TIMEZONE.localize(past_day)
+
             bisect.insort(self.past_days_list, past_day)
 
+            dia_passat =  bisect.bisect( self.past.profile_per_day, [past_day_localized] )  + 1
 
 
-            self.usage_sum += 5
+            ## todo canviar data interna de la mesura (segueix sent la vella encara)
+
+            mesures_dia_passat = past.profile_per_day[dia_passat][1]
+
+            #bisect.insort(self.profile.measures, mesures_dia_passat)
+
+            self.profile.measures.extend(mesures_dia_passat.measures)
+
+            logger.info(" - Adding day_measurements {} for day: {}".format(mesures_dia_passat.measures, dia))
+
+
+            #Set the day to future
+
+            self.usage_sum +=mesures_dia_passat.total_consumption
             self.count += 1
 
             dia += un_dia
@@ -273,13 +295,6 @@ logging.basicConfig(level=logging.INFO)
 
 past.parseFile()
 
-p=Profile(TIMEZONE.localize(datetime(2016,10,25)),TIMEZONE.localize(datetime(2016,10,26)), [])
+p=Profile(TIMEZONE.localize(datetime(2018,10,2)),TIMEZONE.localize(datetime(2018,10,26)), [])
 
-## Past ha de ser llista de llistes per poder bisectejar
-print bisect.bisect(past.profile_per_day, p)
-
-print past.profile_per_day
-
-exit()
-
-future = Future(past, datetime(2016,10,25), datetime(2016,10,26))
+future = Future(past, datetime(2016,10,25), datetime(2016,10,27))
