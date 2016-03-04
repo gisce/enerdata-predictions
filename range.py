@@ -198,6 +198,8 @@ class Past():
 
 
 
+class Future (Past):
+    pass
 
 
 
@@ -206,9 +208,3 @@ logging.basicConfig(level=logging.INFO)
 past = Past()
 
 past.parseFile()
-
-
-# Si te header
-header=True
-
-mes_actual=datetime(2016,2, 1)
