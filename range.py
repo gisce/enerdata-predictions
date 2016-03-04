@@ -208,3 +208,5 @@ logging.basicConfig(level=logging.INFO)
 past = Past()
 
 past.parseFile()
+
+future = Future()
