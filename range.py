@@ -40,10 +40,15 @@ class Prediction():
         a = DictReader(f, delimiter=';')
         count = 0
 
+        stopper=100000000
+        if __NUMBER__:
+            stopper = __NUMBER__
+
         for row in a:
             past_cup = Past()
             count += 1
-            if count > 2:
+
+            if count > stopper:
                 break
             # print row
             data_anterior = datetime.strptime(row['data_anterior'], '%Y-%m-%d')
@@ -90,9 +95,12 @@ class Prediction():
                 future = Future(past[1], start_date, end_date)
                 self.total_consumption += future.profile.total_consumption
 
-        logger.info(
+        message = (
             "Predicted TOTAL consumption of {} kw between {} - {} based on the last year info".format(
                 self.total_consumption, start_date, end_date))
+
+        logger.info(message)
+        print message+"\n"
 
 
 class Past():
@@ -115,14 +123,39 @@ class Past():
     usage_sum = 0
     count = 0
 
+    def get_cof_per_tarif(self, tarifa):
+#        def compare(x):
+        return {
+            '2.0DHS': 'D',
+            '2.1DHS': 'D',
+            '2.0A': 'A',
+            '2.0DHA': 'B',
+            '2.1A': 'A',
+            '2.1DHA': 'B',
+            '3.0A': 'C',
+            '3.1A': 'C',
+            '3.1A LB': 'C',
+
+        }.get(tarifa, 'A')
+
+    #    return compare(tarifa)
+
     # Receives the day to process!
     def include_day(self, day, data):
         bisect.insort(self.dates_past_included, day)
         bisect.insort(self.past, [day, data])
 
-    # Create a profile for a range and estimate it with the correct usage,
-    # tarifa and coef
     def range_profile(self, data_ini, data_fi, consum, periode):
+        """
+        Create a profile for a range and estimate it with the correct usage,
+        tarifa and coef
+
+        :param data_ini:
+        :param data_fi:
+        :param consum:
+        :param periode:
+        :return:
+        """
         #    print '{} {} {}'.format(data_ini, data_fi, consum)
 
         #data_ini = datetime(2015,11,26)
@@ -135,7 +168,8 @@ class Past():
 
         t = T20A()
 
-        t.cof = 'A'
+        #t.cof = 'A'
+        t.cof = self.get_cof_per_tarif(t.code)
 
         estimacio = p.estimate(t, {str(periode): int(consum)})
 
@@ -224,10 +258,13 @@ class Future(Past):
 
         self.project_past_to_future()
 
-        logger.info(
+        message = (
             "Predicted consumption of {} kw for CUPS {} between {} - {} based on the last year info".format(
                 self.profile.total_consumption, self.cups.number, start_date,
                 end_date))
+
+        logger.info(message)
+        print message
 
     # todo -> add correctional factors
     def project_past_to_future(self):
@@ -296,11 +333,17 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-logging.basicConfig(level=logging.INFO)
+
+
+__NUMBER__ = 5
+
+#logging.basicConfig(level=logging.INFO)
 
 prediction = Prediction()
 prediction.parseFile()
 
 cups_list = ["ES0031406178012015XD0F"]
 
-prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 27), cups_list)
+cups_list = None
+
+#prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 27), cups_list)
