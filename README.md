@@ -5,55 +5,282 @@ Predict future enerdata from a past scenario
 
 /usr/bin/python2.7 range.py
 
-ES0031406229285001HS0F 19/10/2015kw 22/10/2015 2118
-INFO:one_year_ago.one_year_ago:ES0031406229285001HS0F 2118kw [#0] 19/10/2015 - 22/10/2015
-INFO:one_year_ago.one_year_ago:  - 2015-10-19 00:00:00+02:00 537
-INFO:one_year_ago.one_year_ago:  - 2015-10-20 00:00:00+02:00 520
-INFO:one_year_ago.one_year_ago:  - 2015-10-21 00:00:00+02:00 517
-INFO:one_year_ago.one_year_ago:  - 2015-10-22 00:00:00+02:00 515
-INFO:one_year_ago.one_year_ago:  - 2015-10-23 00:00:00+02:00 29
+Start parsing incoming file lectures.txt
+ - ES0031408010052001TL0F 2015/12/22 2016/01/22 770kw
+ - ES0031406178012015XD0F 2015/10/19 2015/10/31 5000kw
+ - ES0031406229285001HS0F 2015/10/19 2015/10/22 2118kw
+ - ES0031408010052001TL0F 2015/12/22 2016/01/22 285kw
+ - ES0031405550777003EK0F 2015/11/26 2016/01/28 153kw
+ - ES0031406229285001HS0F 2015/10/19 2016/01/29 2118kw
+ - ES0031406181134001WK0F 2015/12/01 2016/02/01 616kw
+ - ES0031300629986007HP0F 2015/11/21 2016/01/25 337kw
+ - ES0031406229369001JL0F 2015/11/26 2016/01/28 539kw
+ - ES0031406229285001HS0F 2015/08/18 2015/10/19 742kw
+ - ES0031300685838015AN0F 2015/12/29 2016/01/29 40kw
+ - ES0031405681397002QF0F 2015/12/22 2016/01/25 525kw
+ - ES0031406245151001MV0F 2015/11/27 2016/01/27 0kw
+ - ES0031406178012015XD0F 2015/12/27 2016/01/26 55kw
+ - ES0031406174543003VH0F 2015/11/25 2016/01/28 914kw
+ - ES0031405610623030BW0F 2016/01/03 2016/01/31 0kw
+ - ES0031300682320007LS0F 2015/12/23 2016/01/25 228kw
+ - ES0031405992276008SL0F 2015/11/22 2016/01/25 0kw
+ - ES0031405989553003MF0F 2015/12/27 2016/01/28 892kw
+ - ES0031405988465017NJ0F 2015/12/24 2016/01/27 258kw
+ - ES0031408157547009JY0F 2015/12/30 2016/01/29 0kw
+ - ES0031300684350001YY0F 2016/01/04 2016/02/01 347kw
+ - ES0021000004348018DA 2015/12/21 2016/01/27 339kw
+ - ES0031405423277029MH0F 2015/12/28 2016/01/28 292kw
+ - ES0031405986132009FX0F 2015/12/29 2016/01/26 993kw
+ - ES0021000002636668FZ 2015/12/20 2016/01/24 729kw
+ - ES0031405425837012ND0F 2015/12/22 2016/01/25 510kw
+ - ES0031300510445028DB0F 2015/12/27 2016/01/26 318kw
+ - ES0031405971241007EJ0F 2015/12/22 2016/01/25 166kw
+ - ES0031406205073001XT0F 2015/12/28 2016/01/26 516kw
+ - ES0031405428453016QQ0F 2016/01/18 2016/01/28 336kw
+ - ES0021000002636676FE 2015/12/20 2016/01/23 226kw
+ - ES0031406059994005TJ0F 2015/12/28 2016/01/26 415kw
+ - ES0031300561464020ZN0F 2016/01/08 2016/02/01 277kw
+ - ES0031406063689001CJ0F 2015/12/28 2016/01/26 1kw
+ - ES0031406223990040DE0F 2015/11/25 2016/01/26 677kw
+ - ES0031406058261001TJ0F 2015/12/29 2016/01/28 607kw
+ - ES0031405439587021EC0F 2015/11/25 2016/01/27 533kw
+ - ES0031300714101001PT0F 2015/12/28 2016/01/28 173kw
+ - ES0031406223927009YB0F 2015/11/23 2016/01/25 846kw
+ - ES0031405458897012HQ0F 2015/12/22 2016/01/25 683kw
+ - ES0031300798436013HS0F 2015/12/27 2016/01/26 81kw
+ - ES0031405534374002DE0F 2015/12/22 2016/01/22 139kw
+ - ES0031405567043016JC0F 2016/01/03 2016/01/31 448kw
+ - ES0031405667112006KN0F 2016/01/08 2016/01/28 0kw
+ - ES0031406213108001XL0F 2015/10/06 2015/12/02 435kw
+ - ES0031406213354001BB0F 2015/12/02 2016/02/01 998kw
+ - ES0031406058147001NR0F 2015/11/24 2016/01/26 140kw
+ - ES0031406223989001XH0F 2015/12/27 2016/01/26 855kw
+ - ES0031405879090008BD0F 2015/11/30 2016/02/01 535kw
+ - ES0031405640438001BG0F 2015/12/10 2015/12/22 677kw
+ - ES0031405665948002NS0F 2016/01/18 2016/01/27 0kw
+ - ES0031406213600001NA0F 2015/12/01 2016/02/01 286kw
+ - ES0031300734333021AR0F 2015/12/27 2016/01/26 103kw
+ - ES0031300826614002FZ0F 2015/11/30 2015/12/31 740kw
+ - ES0031405686571001DH0F 2015/12/29 2016/01/27 641kw
+ - ES0031300808121001KW0F 2016/01/03 2016/01/31 143kw
+ - ES0031300808670001QS0F 2015/12/19 2016/01/20 315kw
+ - ES0031406217529019HT0F 2015/10/03 2015/11/30 382kw
+ - ES0031300727291001GY0F 2015/11/30 2015/12/31 532kw
+ - ES0031405695738019PH0F 2016/01/03 2016/01/31 145kw
+ - ES0031300725257043YF0F 2015/12/27 2016/01/26 100kw
+ - ES0031300727290001YH0F 2015/11/30 2015/12/31 290kw
+ - ES0031300720262001LJ0F 2015/11/30 2015/12/31 516kw
+ - ES0031405754094013AK0F 2015/12/23 2016/01/26 690kw
+ - ES0031300725257018MM0F 2015/12/27 2016/01/26 239kw
+ - ES0031300827578003ZQ0F 2015/12/28 2016/01/25 130kw
+ - ES0031300724332001ZW0F 2015/12/27 2016/01/26 322kw
+ - ES0031405829494004MD0F 2015/11/26 2016/01/28 0kw
+ - ES0031405879086008KB0F 2015/11/30 2016/02/01 622kw
+ - ES0031405879085008RT0F 2015/11/30 2016/02/01 339kw
+ - ES0031300828109020XD0F 2015/12/23 2016/01/25 72kw
+ - ES0031300716829004ML0F 2015/11/24 2016/01/26 725kw
+ - ES0021000013243939CF 2015/12/20 2016/01/24 21kw
+ - ES0021000013782667YY 2015/12/20 2016/01/24 376kw
+ - ES0021000015688531TK 2015/12/18 2016/01/23 95kw
+ - ES0021000013637071RT 2015/12/12 2016/01/23 195kw
+ - ES0021000002621381DE 2015/12/20 2016/01/24 548kw
+ - ES0031405921774005JP0F 2015/12/22 2016/01/25 340kw
+ - ES0021000007120375AD 2015/12/21 2016/01/27 275kw
+ - ES0031405894204004PS0F 2016/01/03 2016/01/31 223kw
+ - ES0031405881482001MW0F 2016/01/03 2016/01/31 541kw
+ - ES0031405879087008HE0F 2015/11/30 2016/02/01 322kw
+ - ES0031405879089006JL0F 2015/11/30 2016/02/01 260kw
+ - ES0021000004896098XQ 2015/12/21 2016/01/27 635kw
+ - ES0031405879093007AH0F 2015/11/30 2016/02/01 486kw
+ - ES0031405879088008QX0F 2015/11/30 2016/02/01 730kw
+ - ES0031601079864001YT0F 2015/12/30 2016/01/27 1397kw
+ - ES0031300813502015EM0F 2015/12/22 2016/01/25 43kw
+ - ES0031405879091006PH0F 2015/11/30 2016/02/01 326kw
+ - ES0031300813502017EF0F 2015/12/22 2016/01/25 43kw
+ - ES0031405879090008BD0F 2015/10/01 2015/11/30 616kw
+ - ES0031405879092008YP0F 2015/11/30 2016/02/01 347kw
+ - ES0031300002988011PK0F 2015/12/27 2016/01/25 29kw
+ - ES0031406057682003BV0F 2015/12/28 2016/01/26 198kw
+ - ES0031300814622002AF0F 2015/12/28 2016/01/25 22kw
+ - ES0031300814622003AP0F 2015/12/28 2016/01/25 31kw
+ - ES0031300814622004AD0F 2015/12/28 2016/01/25 250kw
+ - ES0031300828111030MH0F 2015/12/23 2016/01/25 125kw
+ - ES0031300827578006ZL0F 2015/12/28 2016/01/25 0kw
 
-ES0031406178012015XD0F 19/10/2015kw 31/10/2015 5000
-INFO:one_year_ago.one_year_ago:ES0031406178012015XD0F 5000kw [#0] 19/10/2015 - 31/10/2015
-INFO:one_year_ago.one_year_ago:  - 2015-10-19 00:00:00+02:00 389
-INFO:one_year_ago.one_year_ago:  - 2015-10-20 00:00:00+02:00 377
-INFO:one_year_ago.one_year_ago:  - 2015-10-21 00:00:00+02:00 374
-INFO:one_year_ago.one_year_ago:  - 2015-10-22 00:00:00+02:00 374
-INFO:one_year_ago.one_year_ago:  - 2015-10-23 00:00:00+02:00 371
-INFO:one_year_ago.one_year_ago:  - 2015-10-24 00:00:00+02:00 396
-INFO:one_year_ago.one_year_ago:  - 2015-10-25 00:00:00+02:00 409
-INFO:one_year_ago.one_year_ago:  - 2015-10-26 00:00:00+02:00 388
-INFO:one_year_ago.one_year_ago:  - 2015-10-27 00:00:00+02:00 378
-INFO:one_year_ago.one_year_ago:  - 2015-10-28 00:00:00+02:00 376
-INFO:one_year_ago.one_year_ago:  - 2015-10-29 00:00:00+02:00 377
-INFO:one_year_ago.one_year_ago:  - 2015-10-30 00:00:00+02:00 372
-INFO:one_year_ago.one_year_ago:  - 2015-10-31 00:00:00+02:00 396
-INFO:one_year_ago.one_year_ago:  - 2015-11-01 00:00:00+02:00 23
+Start prediction for all Past CUPS bewteen 2016/12/30 - 2016/12/31
+ - Predicted consumption of 3 kw for CUPS ES0031300828111030MH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300827578006ZL0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300814622003AP0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300814622004AD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406057682003BV0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300814622002AF0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300002988011PK0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 5 kw for CUPS ES0031405879092008YP0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405879090008BD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 1 kw for CUPS ES0031300813502017EF0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 1 kw for CUPS ES0031300813502015EM0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031405879091006PH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031601079864001YT0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 10 kw for CUPS ES0031405879088008QX0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 6 kw for CUPS ES0031405879093007AH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 14 kw for CUPS ES0021000004896098XQ and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031405879089006JL0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405881482001MW0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031405879087008HE0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 6 kw for CUPS ES0021000007120375AD and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405894204004PS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 8 kw for CUPS ES0031405921774005JP0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0021000013637071RT and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 12 kw for CUPS ES0021000002621381DE and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 2 kw for CUPS ES0021000015688531TK and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 0 kw for CUPS ES0021000013243939CF and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 8 kw for CUPS ES0021000013782667YY and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 10 kw for CUPS ES0031300716829004ML0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 2 kw for CUPS ES0031300828109020XD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031405879085008RT0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 8 kw for CUPS ES0031405879086008KB0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 0 kw for CUPS ES0031405829494004MD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300827578003ZQ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300724332001ZW0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 15 kw for CUPS ES0031405754094013AK0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300725257018MM0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 8 kw for CUPS ES0031300727290001YH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 14 kw for CUPS ES0031300720262001LJ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405695738019PH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300725257043YF0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 14 kw for CUPS ES0031300727291001GY0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406217529019HT0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300808121001KW0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 7 kw for CUPS ES0031300808670001QS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 20 kw for CUPS ES0031300826614002FZ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405686571001DH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300734333021AR0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405640438001BG0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405665948002NS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031406213600001NA0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 7 kw for CUPS ES0031405879090008BD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406223989001XH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 2 kw for CUPS ES0031406058147001NR0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 13 kw for CUPS ES0031406213354001BB0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405667112006KN0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406213108001XL0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031405534374002DE0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405567043016JC0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 16 kw for CUPS ES0031405458897012HQ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300798436013HS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300714101001PT0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 11 kw for CUPS ES0031406223927009YB0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 7 kw for CUPS ES0031405439587021EC0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406058261001TJ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406063689001CJ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 9 kw for CUPS ES0031406223990040DE0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406059994005TJ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300561464020ZN0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405428453016QQ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 5 kw for CUPS ES0021000002636676FE and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031405971241007EJ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406205073001XT0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 12 kw for CUPS ES0031405425837012ND0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300510445028DB0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405986132009FX0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 16 kw for CUPS ES0021000002636668FZ and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405423277029MH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300684350001YY0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 7 kw for CUPS ES0021000004348018DA and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 6 kw for CUPS ES0031405988465017NJ0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031408157547009JY0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405989553003MF0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 0 kw for CUPS ES0031405992276008SL0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031405610623030BW0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 5 kw for CUPS ES0031300682320007LS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 12 kw for CUPS ES0031406174543003VH0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406178012015XD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 12 kw for CUPS ES0031405681397002QF0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 0 kw for CUPS ES0031406245151001MV0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031300685838015AN0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406229285001HS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 7 kw for CUPS ES0031406229369001JL0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 4 kw for CUPS ES0031300629986007HP0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 8 kw for CUPS ES0031406181134001WK0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 8 kw for CUPS ES0031408010052001TL0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 2 kw for CUPS ES0031405550777003EK0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406229285001HS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406178012015XD0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Estimation not found for 2016/12/30 --> 2015/12/25
+ - Predicted consumption of 0 kw for CUPS ES0031406229285001HS0F and P1 between 2016/12/30 - 2016/12/31 based on the last year info
+ - Predicted consumption of 23 kw for CUPS ES0031408010052001TL0F and P2 between 2016/12/30 - 2016/12/31 based on the last year info
 
-INFO:one_year_ago.one_year_ago:Start prediction for all Past CUPS bewteen 2016-10-25 00:00:00 - 2016-10-27 00:00:00
-INFO:one_year_ago.one_year_ago:Present days: []
-INFO:one_year_ago.one_year_ago:Past days: []
+Predicted TOTAL consumption of 398 kw between 2016/12/30 - 2016/12/31 based on the last year info
 
-INFO:one_year_ago.one_year_ago:Setting days list for 2016-10-25 00:00:00 - 2016-10-27 00:00:00
-INFO:one_year_ago.one_year_ago:Creating projected profile: <Profile (2016-10-25 00:00:00+02:00 - 2016-10-27 00:00:00+02:00) 49h 0kWh> 
-INFO:one_year_ago.one_year_ago:1 year ago from 2016-10-25 was 2015-10-20
-INFO:one_year_ago.one_year_ago: - Adding day_measurements for day: 2016-10-25 00:00:00 [520 kw] -> [ProfileHour(date=datetime.datetime(2015, 10, 20, 0, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=30, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 1, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 2, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 3, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=12, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 4, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 5, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=10, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 6, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=10, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 7, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=12, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 8, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 9, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 10, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 11, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 12, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 13, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=23, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 14, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 15, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=27, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 16, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=27, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 17, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=26, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 18, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 19, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 20, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=26, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 21, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=28, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 22, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=32, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 23, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=34, valid=True)] 
-INFO:one_year_ago.one_year_ago:1 year ago from 2016-10-26 was 2015-10-21
-INFO:one_year_ago.one_year_ago: - Adding day_measurements for day: 2016-10-26 00:00:00 [517 kw] -> [ProfileHour(date=datetime.datetime(2015, 10, 21, 0, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=29, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 1, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 2, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 3, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=12, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 4, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 5, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=10, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 6, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=10, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 7, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 8, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=17, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 9, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 10, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 11, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 12, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 13, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 14, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 15, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=27, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 16, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=27, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 17, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 18, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=26, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 19, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 20, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 21, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=28, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 22, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=32, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 23, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=34, valid=True)] 
-INFO:one_year_ago.one_year_ago:1 year ago from 2016-10-27 was 2015-10-22
-INFO:one_year_ago.one_year_ago: - Adding day_measurements for day: 2016-10-27 00:00:00 [515 kw] -> [ProfileHour(date=datetime.datetime(2015, 10, 22, 0, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=28, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 1, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 2, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 3, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=13, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 4, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 5, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=10, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 6, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=9, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 7, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=12, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 8, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 9, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 10, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 11, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 12, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 13, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 14, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 15, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=27, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 16, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=26, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 17, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=26, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 18, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=26, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 19, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=24, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 20, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 21, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=28, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 22, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=32, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 23, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=34, valid=True)] 
-INFO:one_year_ago.one_year_ago:Predicted consumption of 1552 kw for CUPS ES0031406229285001HS0F between 2016-10-25 00:00:00 - 2016-10-27 00:00:00 based on the last year info
-
-INFO:one_year_ago.one_year_ago:Present days: []
-INFO:one_year_ago.one_year_ago:Past days: []
-INFO:one_year_ago.one_year_ago:Setting days list for 2016-10-25 00:00:00 - 2016-10-27 00:00:00
-INFO:one_year_ago.one_year_ago:Creating projected profile: <Profile (2016-10-25 00:00:00+02:00 - 2016-10-27 00:00:00+02:00) 49h 0kWh> 
-INFO:one_year_ago.one_year_ago:1 year ago from 2016-10-25 was 2015-10-20
-INFO:one_year_ago.one_year_ago: - Adding day_measurements for day: 2016-10-25 00:00:00 [377 kw] -> [ProfileHour(date=datetime.datetime(2015, 10, 20, 0, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=22, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 1, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 2, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 3, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=9, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 4, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=8, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 5, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=7, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 6, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=7, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 7, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=9, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 8, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 9, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 10, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 11, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 12, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 13, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=17, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 14, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=17, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 15, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 16, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 17, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 18, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=19, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 19, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 20, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 21, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 22, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=23, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 20, 23, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True)] 
-INFO:one_year_ago.one_year_ago:1 year ago from 2016-10-26 was 2015-10-21
-INFO:one_year_ago.one_year_ago: - Adding day_measurements for day: 2016-10-26 00:00:00 [374 kw] -> [ProfileHour(date=datetime.datetime(2015, 10, 21, 0, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 1, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 2, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 3, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=9, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 4, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=8, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 5, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=7, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 6, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=7, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 7, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=8, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 8, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=12, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 9, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 10, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 11, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 12, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 13, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 14, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 15, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 16, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=19, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 17, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=19, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 18, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 19, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 20, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 21, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 22, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=24, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 21, 23, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=24, valid=True)] 
-INFO:one_year_ago.one_year_ago:1 year ago from 2016-10-27 was 2015-10-22
-INFO:one_year_ago.one_year_ago: - Adding day_measurements for day: 2016-10-27 00:00:00 [374 kw] -> [ProfileHour(date=datetime.datetime(2015, 10, 22, 0, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=21, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 1, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 2, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 3, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=9, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 4, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=8, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 5, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=7, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 6, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=7, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 7, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=9, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 8, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=11, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 9, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 10, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 11, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=15, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 12, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 13, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=16, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 14, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 15, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=19, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 16, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 17, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 18, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=19, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 19, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 20, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=18, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 21, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=20, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 22, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=23, valid=True), ProfileHour(date=datetime.datetime(2015, 10, 22, 23, 0, tzinfo=<DstTzInfo 'Europe/Madrid' CEST+2:00:00 DST>), measure=25, valid=True)] 
-INFO:one_year_ago.one_year_ago:Predicted consumption of 1125 kw for CUPS ES0031406178012015XD0F between 2016-10-25 00:00:00 - 2016-10-27 00:00:00 based on the last year info
-
-INFO:one_year_ago.one_year_ago:Predicted TOTAL consumption of 2677 kw between 2016-10-25 00:00:00 - 2016-10-27 00:00:00 based on the last year info
+PREDICTION SUMMARY
+ - 398 kw from 2016/12/30 to 2016/12/31 [1 days]
+  - 398 kw 2016/12/31
+   - 00:00 - 01:00 :: 17 kw
+   - 01:00 - 02:00 :: 13 kw
+   - 02:00 - 03:00 :: 20 kw
+   - 03:00 - 04:00 :: 12 kw
+   - 04:00 - 05:00 :: 8 kw
+   - 05:00 - 06:00 :: 6 kw
+   - 06:00 - 07:00 :: 13 kw
+   - 07:00 - 08:00 :: 13 kw
+   - 08:00 - 09:00 :: 11 kw
+   - 09:00 - 10:00 :: 10 kw
+   - 10:00 - 11:00 :: 15 kw
+   - 11:00 - 12:00 :: 19 kw
+   - 12:00 - 13:00 :: 20 kw
+   - 13:00 - 14:00 :: 23 kw
+   - 14:00 - 15:00 :: 12 kw
+   - 15:00 - 16:00 :: 19 kw
+   - 16:00 - 17:00 :: 16 kw
+   - 17:00 - 18:00 :: 20 kw
+   - 18:00 - 19:00 :: 21 kw
+   - 19:00 - 20:00 :: 17 kw
+   - 20:00 - 21:00 :: 23 kw
+   - 21:00 - 22:00 :: 18 kw
+   - 22:00 - 23:00 :: 26 kw
+   - 23:00 - 24:00 :: 26 kw
