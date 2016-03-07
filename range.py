@@ -35,7 +35,9 @@ class Prediction():
 
     days_to_predict = [] #list of datetime
 
-    predictions_day_by_hour = dict() # dict of list { day.toordinal(): hours[] }
+    predictions_day_by_hour = dict() # dict of list { day.toordinal(): [ #list day_consumption, array of hours[] }
+
+    hourly_detail=False
 
     def importData(self):
         self.parseFile()
@@ -89,12 +91,27 @@ class Prediction():
 
             bisect.insort(self.past_cups, [past_cup.cups, past_cup, past_cup.period])
 
+    def predictions_by_day_increase_hour_measure(self, day, hour, measure):
+        self.predictions_day_by_hour[day][1][hour] += measure
+
+
+    def predictions_by_day_increase_total(self, day, measure):
+        self.predictions_day_by_hour[day][0] += measure
+
+
+
     def extract_and_add_hours_to_prediction(self, partial):
+        day_total=0;
         for day in self.days_to_predict:
             for hour in partial.profile.measures:
                 if hour.measure > 0:
-                    print "   ---> {} {} kw".format(hour.date, hour.measure)
-                    self.predictions_day_by_hour[day.toordinal()][hour.date.hour] += hour.measure
+                    #print "   ---> {} {} kw".format(hour.date, hour.measure)
+                    self.predictions_by_day_increase_hour_measure(day.toordinal(), hour.date.hour, hour.measure)
+                    day_total += hour.measure
+
+            self.predictions_by_day_increase_total(day.toordinal(), day_total)
+            day_total=0
+
 
 
 
@@ -108,7 +125,7 @@ class Prediction():
             while self.days_count < delta.days:
                 bisect.insort(self.days_to_predict, start_date + un_dia)
                 #bisect.insort(self.predictions_day_by_hour, [, [0]*24])
-                self.predictions_day_by_hour[(start_date + un_dia).toordinal()] = [0]*24
+                self.predictions_day_by_hour[(start_date + un_dia).toordinal()] = [0, [0]*24] #list day_consumption, array of hours
 
                 self.days_count+=1
 
@@ -146,18 +163,25 @@ class Prediction():
         logger.info(message)
         print message+"\n"
 
+    def view_hourly_detail(self):
+        self.hourly_detail=True
+
+    def hide_hourly_detail(self):
+        self.hourly_detail=False
 
     def summarize(self):
         print "PREDICTION SUMMARY"
-        print " - From {} to {} [{} days]".format(self.start_date, self.end_date, self.days_count)
+        print " - {} kw from {} to {} [{} days]".format(self.total_consumption, self.start_date.strftime("%Y/%m/%d"), self.end_date.strftime("%Y/%m/%d"), self.days_count)
 
         for day, values in self.predictions_day_by_hour.items():
             self.print_day_summary(day, values)
 
     def print_day_summary(self,day, values):
-        print ' - Detail for {}'.format(date.fromordinal(day))
-        for idx, pred in enumerate(values):
-            print '   - {:0>2}:00 - {:0>2}:00 :: {} kw'.format(idx, idx+1, pred)
+        print '  - {} kw {}'.format(values[0], date.fromordinal(day).strftime("%Y/%m/%d"))
+
+        if self.hourly_detail:
+            for idx, pred in enumerate(values[1]):
+                print '   - {:0>2}:00 - {:0>2}:00 :: {} kw'.format(idx, idx+1, pred)
 
 class Past():
     cups = None
@@ -436,6 +460,8 @@ cups_list = ["ES0031406178012015XD0F"]
 cups_list = None
 
 prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 26), cups_list)
+
+#prediction.view_hourly_detail()
 
 prediction.summarize()
 
