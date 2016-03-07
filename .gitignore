@@ -1,6 +1,8 @@
 .idea
 *.pyc
 *.swp
+*.swo
+*.swn
 a.py*
 test.py
 build/*
