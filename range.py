@@ -4,7 +4,7 @@ import sys
 from datetime import datetime, timedelta, date
 from enerdata.profiles.profile import Profile
 from enerdata.datetime.timezone import TIMEZONE
-from enerdata.contracts.tariff import T20A
+from enerdata.contracts.tariff import *
 
 from enerdata.cups.cups import CUPS
 
@@ -14,16 +14,15 @@ from time import sleep
 
 from termcolor import colored
 
-import logging
-# logging.basicConfig(level=logging.DEBUG)
 
 import bisect
 
-fitx = 'lectures.txt'
 
 from one_year_ago.one_year_ago import *
 from datetime import datetime, timedelta, date
 
+fitx = 'lectures.txt'
+__NUMBER__ = None
 
 class Prediction():
     past_cups = []  # list of [cup, Past]
@@ -39,38 +38,37 @@ class Prediction():
         f = open(fitx, 'rb')
         a = DictReader(f, delimiter=';')
         count = 0
-
-        stopper=100000000
-        if __NUMBER__:
-            stopper = __NUMBER__
+        mes_actual = datetime.today()
 
         for row in a:
             past_cup = Past()
             count += 1
 
-            if count > stopper:
+            if __NUMBER__ and count > __NUMBER__:
                 break
             # print row
             data_anterior = datetime.strptime(row['data_anterior'], '%Y-%m-%d')
             data_lectura = datetime.strptime(row['data_mesura'], '%Y-%m-%d')
 
-            print '{} {}kw {} {}'.format(
+            print '{} {} {} {}kw'.format(
                 row['cups'], data_anterior.strftime("%d/%m/%Y"),
                 data_lectura.strftime("%d/%m/%Y"), row['consum'])
 
             # todo ISSUE enerdata tema mes actual
             # El mes actual encara no esta disponible
             # http://www.ree.es/sites/default/files/simel/perff/PERFF_201602.gz
-            if 1 or (mes_actual - data_lectura).total_seconds() > 0:
+
+            if (mes_actual - data_lectura).total_seconds() > 0:
                 try:
                     past_cup.range_process(row)
 
                     # print colored("[!] OK", 'green'), " :: {}
                     # {}".format(row,sys.exc_info())
                 except:
+
+                    print colored("[!] ERROR", 'red'), " :: {} {}\n".format(row,sys.exc_info())
+
                     raise
-                    # print colored("[!] ERROR", 'red'), " :: {}
-                    # {}\n".format(row,sys.exc_info())
             else:
                 print colored(
                     "[!] WARNING",
@@ -124,7 +122,6 @@ class Past():
     count = 0
 
     def get_cof_per_tarif(self, tarifa):
-#        def compare(x):
         return {
             '2.0DHS': 'D',
             '2.1DHS': 'D',
@@ -138,14 +135,28 @@ class Past():
 
         }.get(tarifa, 'A')
 
-    #    return compare(tarifa)
+
+
+    def get_tariff_per_tarif(self, tarifa):
+        return {
+            '2.0DHS': 'T20DHS',
+            '2.1DHS': 'T21DHS',
+            '2.0A': 'T20A',
+            '2.0DHA': 'T20DHA',
+            '2.1A': 'T21A',
+            '2.1DHA': 'T21DHA',
+            '3.0A': 'T30A',
+            '3.1A': 'T31A',
+            '3.1A LB': 'T31A',
+
+        }.get(tarifa, 'T20A')
 
     # Receives the day to process!
     def include_day(self, day, data):
         bisect.insort(self.dates_past_included, day)
         bisect.insort(self.past, [day, data])
 
-    def range_profile(self, data_ini, data_fi, consum, periode):
+    def range_profile(self, data_ini, data_fi, tarifa, consum, periode):
         """
         Create a profile for a range and estimate it with the correct usage,
         tarifa and coef
@@ -156,22 +167,23 @@ class Past():
         :param periode:
         :return:
         """
-        #    print '{} {} {}'.format(data_ini, data_fi, consum)
-
-        #data_ini = datetime(2015,11,26)
-        #data_fi = datetime(2015,11,27)
 
         data_ini = TIMEZONE.localize(data_ini)
         data_fi = TIMEZONE.localize(data_fi + timedelta(days=1))
 
         p = Profile(data_ini, data_fi, [])
 
-        t = T20A()
+        t = get_tariff_by_code(tarifa)()
 
-        #t.cof = 'A'
         t.cof = self.get_cof_per_tarif(t.code)
 
+        #periode="P1"
+
+        print periode
+
         estimacio = p.estimate(t, {str(periode): int(consum)})
+
+        print "estima",estimacio.measures
 
         # print '{} {}-{}'.format(estimacio.total_consumption, estimacio.start_date.strftime('%d/%m/%Y'), estimacio.end_date.strftime('%d/%m/%Y'))
         # print '{} mesures\n'.format(len(estimacio.measures))
@@ -197,6 +209,8 @@ class Past():
         while dia <= dia_fi:
             perfil_dia = Profile(dia, dia + un_dia, [])
 
+            print perfil_gran.measures[0][1]
+
             perfil_dia.measures = [mesura
                                    for mesura in perfil_gran.measures
                                    if mesura.date.month == dia.month and
@@ -219,14 +233,14 @@ class Past():
 
         consum = entrada['consum']
         periode = entrada['periode']
+        tarifa = entrada['tarifa']
 
-        self.profile = self.range_profile(data_anterior, data_lectura, consum,
+        self.profile = self.range_profile(data_anterior, data_lectura, tarifa, consum,
                                           periode)
         self.date_ini = data_anterior
         self.date_fi = data_lectura
         self.usage_sum = consum
 
-        # print self.estimation_summary()
         logger.info(self.estimation_summary())
 
         # create a profile for each day
@@ -335,9 +349,12 @@ class Future(Past):
 
 
 
-__NUMBER__ = 5
 
-#logging.basicConfig(level=logging.INFO)
+__NUMBER__ = 1
+
+#import logging
+#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 prediction = Prediction()
 prediction.parseFile()
@@ -346,4 +363,4 @@ cups_list = ["ES0031406178012015XD0F"]
 
 cups_list = None
 
-#prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 27), cups_list)
+prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 27), cups_list)
