@@ -23,13 +23,19 @@ from datetime import datetime, timedelta, date
 
 fitx = 'lectures.txt'
 __NUMBER__ = None
+un_dia = timedelta(days=1)
+
 
 class Prediction():
     past_cups = []  # list of [cup, Past]
     future_cups = []  # list of [cup, Past]
 
     total_consumption = 0
-    count = 0
+    days_count = 0
+
+    days_to_predict = [] #list of datetime
+
+    predictions_day_by_hour = dict() # dict of list { day.toordinal(): hours[] }
 
     def importData(self):
         self.parseFile()
@@ -40,7 +46,7 @@ class Prediction():
         count = 0
         mes_actual = datetime.today()
 
-        message = "Start parsing incoming file {}".format(fitx)
+        message = "\nStart parsing incoming file {}".format(fitx)
         print message
         logger.info(message)
 
@@ -55,7 +61,7 @@ class Prediction():
             data_anterior = datetime.strptime(row['data_anterior'], '%Y-%m-%d')
             data_lectura = datetime.strptime(row['data_mesura'], '%Y-%m-%d')
 
-            print '{} {} {} {}kw'.format(
+            print ' - {} {} {} {}kw'.format(
                 row['cups'], data_anterior.strftime("%d/%m/%Y"),
                 data_lectura.strftime("%d/%m/%Y"), row['consum'])
 
@@ -83,6 +89,29 @@ class Prediction():
 
             bisect.insort(self.past_cups, [past_cup.cups, past_cup, past_cup.period])
 
+    def extract_and_add_hours_to_prediction(self, partial):
+        for day in self.days_to_predict:
+            for hour in partial.profile.measures:
+                if hour.measure > 0:
+                    print "   ---> {} {} kw".format(hour.date, hour.measure)
+                    self.predictions_day_by_hour[day.toordinal()][hour.date.hour] += hour.measure
+
+
+
+    def initialize_prediction (self, start_date, end_date):
+            delta = end_date - start_date
+
+            self.start_date=start_date
+            self.end_date = end_date
+
+            self.days_count=0
+            while self.days_count < delta.days:
+                bisect.insort(self.days_to_predict, start_date + un_dia)
+                #bisect.insort(self.predictions_day_by_hour, [, [0]*24])
+                self.predictions_day_by_hour[(start_date + un_dia).toordinal()] = [0]*24
+
+                self.days_count+=1
+
     def predict(self, start_date, end_date, cups_list=None):
         # todo filter cups list - currently bypassed to analyze all CUPS
         if 0 and cups_list:
@@ -92,23 +121,43 @@ class Prediction():
                                 datetime(2016, 10, 27))
         else:
             message = (
-                "Start prediction for all Past CUPS bewteen {} - {}".format(
+                "\nStart prediction for all Past CUPS bewteen {} - {}".format(
                     start_date, end_date))
 
             logger.info(message)
             print message
 
+            self.initialize_prediction(start_date, end_date)
+
+
+
             for past in self.past_cups:
                 future = Future(past[1], start_date, end_date)
+
+                self.extract_and_add_hours_to_prediction (future)
+                #self.future_cups = future
+                bisect.insort(self.future_cups, future)
                 self.total_consumption += future.profile.total_consumption
 
         message = (
-            "Predicted TOTAL consumption of {} kw between {} - {} based on the last year info".format(
+            "\nPredicted TOTAL consumption of {} kw between {} - {} based on the last year info".format(
                 self.total_consumption, start_date, end_date))
 
         logger.info(message)
         print message+"\n"
 
+
+    def summarize(self):
+        print "PREDICTION SUMMARY"
+        print " - From {} to {} [{} days]".format(self.start_date, self.end_date, self.days_count)
+
+        for day, values in self.predictions_day_by_hour.items():
+            self.print_day_summary(day, values)
+
+    def print_day_summary(self,day, values):
+        print ' - Detail for {}'.format(date.fromordinal(day))
+        for idx, pred in enumerate(values):
+            print '   - {:0>2}:00 - {:0>2}:00 :: {} kw'.format(idx, idx+1, pred)
 
 class Past():
     cups = None
@@ -161,7 +210,7 @@ class Past():
             '3.1A': 'T31A',
             '3.1A LB': 'T31A',
 
-        }.get(tarifa, 'T20A')
+        }.get(tarifa, None)
 
     # Receives the day to process!
     def include_day(self, day, data):
@@ -205,8 +254,6 @@ class Past():
     # todo prev insort -> review if date exist and sum the new one (for next
     # day 0h estimation)
     def profile_cut_by_date(self, perfil_gran):
-        un_dia = timedelta(days=1)
-
         perfils_dia_llista = []
 
         dia = perfil_gran.start_date
@@ -214,7 +261,7 @@ class Past():
 
         logger.debug("GRAN: {}".format(perfil_gran))
 
-        while dia <= dia_fi:
+        while dia < dia_fi:
             perfil_dia = Profile(dia, dia + un_dia, [])
 
             perfil_dia.measures = [mesura
@@ -226,8 +273,9 @@ class Past():
 
             logger.info("  - {} {}".format(perfil_dia.start_date,
                                            perfil_dia.total_consumption))
-            dia += un_dia
+
             bisect.insort(perfils_dia_llista, [dia, perfil_dia])
+            dia += un_dia
 
         return perfils_dia_llista
 
@@ -273,13 +321,17 @@ class Future(Past):
 
         self.past_days_list = []
 
+        self.by_ours = []
+
         logger.info("Present days: {}".format(self.present_days_list))
         logger.info("Past days: {}".format(self.past_days_list))
+
+
 
         self.project_past_to_future()
 
         message = (
-            "Predicted consumption of {} kw for CUPS {} and {} between {} - {} based on the last year info".format(
+            " - Predicted consumption of {} kw for CUPS {} and {} between {} - {} based on the last year info".format(
                 self.profile.total_consumption, self.cups.number, self.past.period, start_date,
                 end_date))
 
@@ -303,7 +355,7 @@ class Future(Past):
 
         logger.info("Creating projected profile: {} ".format(self.profile))
 
-        while dia <= self.date_fi:
+        while dia < self.date_fi:
             # Set the present day
 
             dia = (dia)
@@ -314,22 +366,34 @@ class Future(Past):
 
             # Set the past day
             past_day = self.get_past_day(dia_localized)
+
             past_day_localized = TIMEZONE.localize(past_day)
 
             bisect.insort(self.past_days_list, past_day)
 
-            dia_passat = bisect.bisect_right(self.past.profile_per_day, [
-                past_day_localized
-            ])
+
+            def index_passat(a,x):
+                i=bisect.bisect_left(a, [ x ])
+                if i != len(a) and a[i][0] == x:
+                    return i
+                return None
+
+
+            dia_passat = index_passat(self.past.profile_per_day, past_day_localized)
+
+            if not dia_passat:
+                print " - Estimation not found for {} --> {}".format(dia, past_day)
+                dia += un_dia
+                continue
 
             # todo canviar data interna de la mesura (segueix sent la vella
             # encara)
 
-            print past_day_localized
+
             mesures_dia_passat = self.past.profile_per_day[dia_passat][1]
-            print "x",mesures_dia_passat
 
             #bisect.insort(self.profile.measures, mesures_dia_passat)
+
 
             self.profile.measures.extend(mesures_dia_passat.measures)
 
@@ -358,7 +422,7 @@ class Future(Past):
 
 
 
-__NUMBER__ = 8
+__NUMBER__ = 3
 
 #import logging
 #logging.basicConfig(level=logging.DEBUG)
@@ -371,4 +435,8 @@ cups_list = ["ES0031406178012015XD0F"]
 
 cups_list = None
 
-prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 27), cups_list)
+prediction.predict(datetime(2016, 10, 25), datetime(2016, 10, 26), cups_list)
+
+prediction.summarize()
+
+#print prediction.future_cups[0].total_consumption
