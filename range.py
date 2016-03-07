@@ -40,6 +40,11 @@ class Prediction():
         count = 0
         mes_actual = datetime.today()
 
+        message = "Start parsing incoming file {}".format(fitx)
+        print message
+        logger.info(message)
+
+
         for row in a:
             past_cup = Past()
             count += 1
@@ -61,6 +66,7 @@ class Prediction():
             if (mes_actual - data_lectura).total_seconds() > 0:
                 try:
                     past_cup.range_process(row)
+                    past_cup.period = row['periode']
 
                     # print colored("[!] OK", 'green'), " :: {}
                     # {}".format(row,sys.exc_info())
@@ -75,7 +81,7 @@ class Prediction():
                     'yellow'), " :: No hi ha dades pel mes {}.\n".format(
                         mes_actual.month)
 
-            bisect.insort(self.past_cups, [past_cup.cups, past_cup])
+            bisect.insort(self.past_cups, [past_cup.cups, past_cup, past_cup.period])
 
     def predict(self, start_date, end_date, cups_list=None):
         # todo filter cups list - currently bypassed to analyze all CUPS
@@ -85,9 +91,12 @@ class Prediction():
                 future = Future(past, datetime(2016, 10, 25),
                                 datetime(2016, 10, 27))
         else:
-            logger.info(
+            message = (
                 "Start prediction for all Past CUPS bewteen {} - {}".format(
                     start_date, end_date))
+
+            logger.info(message)
+            print message
 
             for past in self.past_cups:
                 future = Future(past[1], start_date, end_date)
@@ -105,6 +114,9 @@ class Past():
     cups = None
     date_ini = None
     date_fi = None
+
+    # default period
+    period = 'P1'
 
     # generic profile with gap fixing for null days
     # created with the info of estimated
@@ -179,11 +191,7 @@ class Past():
 
         #periode="P1"
 
-        print periode
-
         estimacio = p.estimate(t, {str(periode): int(consum)})
-
-        print "estima",estimacio.measures
 
         # print '{} {}-{}'.format(estimacio.total_consumption, estimacio.start_date.strftime('%d/%m/%Y'), estimacio.end_date.strftime('%d/%m/%Y'))
         # print '{} mesures\n'.format(len(estimacio.measures))
@@ -208,8 +216,6 @@ class Past():
 
         while dia <= dia_fi:
             perfil_dia = Profile(dia, dia + un_dia, [])
-
-            print perfil_gran.measures[0][1]
 
             perfil_dia.measures = [mesura
                                    for mesura in perfil_gran.measures
@@ -273,8 +279,8 @@ class Future(Past):
         self.project_past_to_future()
 
         message = (
-            "Predicted consumption of {} kw for CUPS {} between {} - {} based on the last year info".format(
-                self.profile.total_consumption, self.cups.number, start_date,
+            "Predicted consumption of {} kw for CUPS {} and {} between {} - {} based on the last year info".format(
+                self.profile.total_consumption, self.cups.number, self.past.period, start_date,
                 end_date))
 
         logger.info(message)
@@ -312,14 +318,16 @@ class Future(Past):
 
             bisect.insort(self.past_days_list, past_day)
 
-            dia_passat = bisect.bisect(self.past.profile_per_day, [
+            dia_passat = bisect.bisect_right(self.past.profile_per_day, [
                 past_day_localized
-            ]) + 1
+            ])
 
             # todo canviar data interna de la mesura (segueix sent la vella
             # encara)
 
+            print past_day_localized
             mesures_dia_passat = self.past.profile_per_day[dia_passat][1]
+            print "x",mesures_dia_passat
 
             #bisect.insort(self.profile.measures, mesures_dia_passat)
 
@@ -350,11 +358,11 @@ class Future(Past):
 
 
 
-__NUMBER__ = 1
+__NUMBER__ = 8
 
 #import logging
 #logging.basicConfig(level=logging.DEBUG)
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
 
 prediction = Prediction()
 prediction.parseFile()
