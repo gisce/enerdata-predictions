@@ -22,6 +22,15 @@ def format_date(date_to_format):
     return date_to_format.strftime("%Y/%m/%d")
 
 
+def format_negreta(entrada):
+    return colored(entrada, attrs=['bold'])
+
+def format_verd(entrada):
+    return colored(entrada,"green")
+
+
+
+
 class Prediction():
     past_cups = []  # list of [cup, Past]
     future_cups = []  # list of [cup, Past]
@@ -29,7 +38,8 @@ class Prediction():
     total_consumption = 0
     days_count = 0
 
-    days_to_predict = []  #list of datetime
+    days_to_predict = []        #list of datetime for future days
+    days_to_predict_past = []   #list of datetime for past days (same order than days_to_predict)
 
     predictions_day_by_hour = dict(
     )  # dict of list { day.toordinal(): [ #list day_consumption, array of hours[] }
@@ -78,7 +88,6 @@ class Prediction():
                     # print colored("[!] OK", 'green'), " :: {}
                     # {}".format(row,sys.exc_info())
                 except:
-
                     print colored("[!] ERROR", 'red'), " :: {} {}\n".format(
                         row, sys.exc_info())
 
@@ -93,16 +102,24 @@ class Prediction():
                                            past_cup.period])
 
     def predictions_by_day_increase_hour_measure(self, day, hour, measure):
+        #print "yyy", datetime.fromordinal(day), day, hour, measure
+        #pythoprint self.predictions_day_by_hour
         self.predictions_day_by_hour[day][1][hour] += measure
 
     def predictions_by_day_increase_total(self, day, measure):
         self.predictions_day_by_hour[day][0] += measure
 
+    def is_same_day(self, datea, dateb):
+        return datea.date() == dateb.date()
+
     def extract_and_add_hours_to_prediction(self, partial):
         day_total = 0
+        count = 0
         for day in self.days_to_predict:
             for hour in partial.profile.measures:
                 if hour.measure > 0:
+                    if not self.is_same_day(hour.date, self.days_to_predict_past[count]):
+                        continue
                     #print "   ---> {} {} kw".format(hour.date, hour.measure)
                     self.predictions_by_day_increase_hour_measure(
                         day.toordinal(), hour.date.hour, hour.measure)
@@ -110,21 +127,33 @@ class Prediction():
 
             self.predictions_by_day_increase_total(day.toordinal(), day_total)
             day_total = 0
+            count += 1
 
     def initialize_prediction(self, start_date, end_date):
         delta = end_date - start_date
 
-        self.start_date = start_date
+        self.start_date = dia_cont = start_date
         self.end_date = end_date
 
         self.days_count = 0
         while self.days_count < delta.days:
-            bisect.insort(self.days_to_predict, start_date + un_dia)
+
+            self.days_to_predict_past.append(OneYearAgo(dia_cont).day_year_ago)
+            self.days_to_predict.append(dia_cont)
+
+            #bisect.insort(self.days_to_predict, dia_cont)
+            #bisect.insort(self.days_to_predict_past, OneYearAgo(dia_cont).day_year_ago)
+
+
+            #print "inserto", dia_cont
             #bisect.insort(self.predictions_day_by_hour, [, [0]*24])
-            self.predictions_day_by_hour[(start_date + un_dia).toordinal()] = [
+
+
+            self.predictions_day_by_hour[(dia_cont).toordinal()] = [
                 0, [0] * 24
             ]  #list day_consumption, array of hours
 
+            dia_cont+=un_dia
             self.days_count += 1
 
     def predict(self, start_date, end_date, cups_list=None):
@@ -151,6 +180,7 @@ class Prediction():
                 #self.future_cups = future
                 bisect.insort(self.future_cups, future)
                 self.total_consumption += future.profile.total_consumption
+                #print "TOTAL", future.profile.total_consumption
 
         message = (
             "\nPredicted TOTAL consumption of {} kw between {} - {} based on the last year info".format(
@@ -166,23 +196,28 @@ class Prediction():
     def hide_hourly_detail(self):
         self.hourly_detail = False
 
+
+
     def summarize(self):
-        print "PREDICTION SUMMARY"
-        print " - {} kw from {} to {} [{} days]".format(
-            self.total_consumption, format_date(self.start_date),
+        print format_negreta("PREDICTION SUMMARY\n")
+        print "  ", format_verd("{} kw".format(self.total_consumption)),"from {} to {} [{} days]\n".format(
+            format_date(self.start_date),
             format_date(self.end_date), self.days_count)
 
-        for day, values in self.predictions_day_by_hour.items():
+        for day in self.days_to_predict:
+            day = day.toordinal()
+            values = self.predictions_day_by_hour[day]
+            ##print day, sum(values[1]), values
             self.print_day_summary(day, values)
+            print ""
 
     def print_day_summary(self, day, values):
-        print '  - {} kw {}'.format(values[0],
+        print '   + {} kw {}'.format(values[0],
                                     format_date(date.fromordinal(day)))
-
         if self.hourly_detail:
             for idx, pred in enumerate(values[1]):
-                print '   - {:0>2}:00 - {:0>2}:00 :: {} kw'.format(
-                    idx, idx + 1, pred)
+                print '      - {} kw {:0>2}:00 - {:0>2}:00'.format(
+                    pred, idx, idx + 1)
 
 
 class Past():
@@ -208,15 +243,16 @@ class Past():
     usage_sum = 0
     count = 0
 
+    # todo wait for merge PR #53 @ enerdata to delete this method!
     def get_cof_per_tarif(self, tarifa):
         return {
-            '2.0DHS': 'D',
-            '2.1DHS': 'D',
-            '2.0A': 'A',
-            '2.0DHA': 'B',
-            '2.1A': 'A',
-            '2.1DHA': 'B',
-            '3.0A': 'C',
+            'x2.0DHS': 'D',
+            'x2.1DHS': 'D',
+            'x2.0A': 'A',
+            'x2.0DHA': 'B',
+            'x2.1A': 'A',
+            'x2.1DHA': 'B',
+            'x3.0A': 'C',
             '3.1A': 'C',
             '3.1A LB': 'C',
         }.get(tarifa, 'A')
@@ -258,7 +294,7 @@ class Past():
 
         t = get_tariff_by_code(tarifa)()
 
-        t.cof = self.get_cof_per_tarif(t.code)
+#        t.cof = self.get_cof_per_tarif(t.code)
 
         #periode="P1"
 
@@ -379,8 +415,6 @@ class Future(Past):
         while dia < self.date_fi:
             # Set the present day
 
-            dia = (dia)
-
             dia_localized = TIMEZONE.localize(dia)
 
             bisect.insort(self.present_days_list, dia)
@@ -416,10 +450,14 @@ class Future(Past):
 
             self.profile.measures.extend(mesures_dia_passat.measures)
 
-            logger.info(
+            missatge = (
                 " - Adding day_measurements for day: {} [{} kw] -> {} ".format(
                     dia, mesures_dia_passat.total_consumption,
                     mesures_dia_passat.measures))
+
+            print missatge
+
+            logger.info(missatge)
 
             # Set the day to future
 
@@ -451,9 +489,9 @@ cups_list = ["ES0031406178012015XD0F"]
 
 cups_list = None
 
-prediction.predict(datetime(2016, 12, 30), datetime(2016, 12, 31), cups_list)
+prediction.predict(datetime(2016, 12, 29), datetime(2016, 12, 31), cups_list)
 
-#prediction.view_hourly_detail()
+prediction.view_hourly_detail()
 
 prediction.summarize()
 
