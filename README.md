@@ -1,8 +1,14 @@
 # enerdata-predictions
 Predict future enerdata from a past scenario
 
+## Iteration 0
+
+Get measurements from a CSV file and predict the amount of energy needed for a future date using as a reference the past year events.
+
+
 ## Example of use
 
+```
 /usr/bin/python2.7 range.py
 
 Start parsing incoming file lectures.txt
@@ -68,3 +74,5 @@ PREDICTION SUMMARY
       - 18 kw    21:00 - 22:00
       - 26 kw    22:00 - 23:00
       - 26 kw    23:00 - 24:00
+
+```
