@@ -4,19 +4,41 @@ import bisect
 import sys
 from csv import DictReader
 from datetime import datetime, timedelta, date
-
 from enerdata.contracts.tariff import *
 from enerdata.cups.cups import CUPS
 from enerdata.datetime.timezone import TIMEZONE
 from enerdata.profiles.profile import Profile
 from termcolor import colored
-
 from one_year_ago.one_year_ago import *
 
 fitx = 'lectures.txt'
 __NUMBER__ = None
 __info__ = None
+
+# Performance monitor
+from timeit import default_timer as timer
+__timer__ = None
+timer_start = None
+timer_end = None
+
 un_dia = timedelta(days=1)
+
+
+def performance_summary(regs_count=None):
+    missatge = format_secundari("   Takes {0:.5f}s".format(timer_end -
+                                                           timer_start))
+    print missatge + format_secundari(" for {} registries".format(
+        regs_count)) if regs_count else missatge
+
+
+def performance_start():
+    global timer_start
+    timer_start = timer()
+
+
+def performance_stop():
+    global timer_end
+    timer_end = timer()
 
 
 def format_date(date_to_format):
@@ -24,11 +46,15 @@ def format_date(date_to_format):
 
 
 def format_negreta(entrada):
-    return colored(entrada, attrs=['bold'])
+    return colored(entrada, attrs=['bold', 'reverse'])
 
 
 def format_verd(entrada):
     return colored(entrada, "green")
+
+
+def format_secundari(entrada):
+    return colored(entrada, 'grey')
 
 
 def informam(entrada):
@@ -59,6 +85,10 @@ class Prediction():
         self.parseFile()
 
     def parseFile(self):
+
+        if __timer__:
+            performance_start()
+
         f = open(fitx, 'rb')
         a = DictReader(f, delimiter=';')
         count = 0
@@ -105,6 +135,10 @@ class Prediction():
 
             bisect.insort(self.past_cups, [past_cup.cups, past_cup,
                                            past_cup.period])
+
+        if __timer__:
+            performance_stop()
+            performance_summary(count - 1)
 
     def predictions_by_day_increase_hour_measure(self, day, hour, measure):
         #print "yyy", datetime.fromordinal(day), day, hour, measure
@@ -161,6 +195,9 @@ class Prediction():
             self.days_count += 1
 
     def predict(self, start_date, end_date, cups_list=None):
+        if __timer__:
+            performance_start()
+
         # todo filter cups list - currently bypassed to analyze all CUPS
         if 0 and cups_list:
             for cups in cups_list:
@@ -192,6 +229,11 @@ class Prediction():
                 format_date(end_date)))
 
         logger.info(message)
+
+        if __timer__:
+            performance_stop()
+            performance_summary(len(self.past_cups))
+
         print message + "\n"
 
     def view_hourly_detail(self):
@@ -201,7 +243,7 @@ class Prediction():
         self.hourly_detail = False
 
     def summarize(self):
-        print format_negreta("PREDICTION SUMMARY\n")
+        print format_negreta("PREDICTION SUMMARY"), "\n"
         print "  ", format_verd("{} kw".format(
             self.total_consumption)), "from {} to {} [{} days]\n".format(
                 format_date(self.start_date), format_date(self.end_date),
@@ -479,8 +521,9 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 10
+__NUMBER__ = 100
 __info__ = False
+__timer__ = True
 
 #import logging
 #logging.basicConfig(level=logging.DEBUG)
