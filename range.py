@@ -15,9 +15,8 @@ from one_year_ago.one_year_ago import *
 
 fitx = 'lectures.txt'
 __NUMBER__ = None
-__info__=None
+__info__ = None
 un_dia = timedelta(days=1)
-
 
 
 def format_date(date_to_format):
@@ -31,9 +30,11 @@ def format_negreta(entrada):
 def format_verd(entrada):
     return colored(entrada, "green")
 
+
 def informam(entrada):
     if __info__:
         print(entrada)
+
 
 class Prediction():
     past_cups = []  # list of [cup, Past]
@@ -77,9 +78,8 @@ class Prediction():
             data_anterior = datetime.strptime(row['data_anterior'], '%Y-%m-%d')
             data_lectura = datetime.strptime(row['data_mesura'], '%Y-%m-%d')
 
-            informam (' - {} {} {} {}kw'.format(
-                row['cups'], format_date(data_anterior),
-                format_date(data_lectura), row['consum']))
+            informam(' - {} {} {} {}kw'.format(row['cups'], format_date(
+                data_anterior), format_date(data_lectura), row['consum']))
 
             # todo ISSUE enerdata tema mes actual
             # El mes actual encara no esta disponible
@@ -219,8 +219,8 @@ class Prediction():
                                      format_date(date.fromordinal(day)))
         if self.hourly_detail:
             for idx, pred in enumerate(values[1]):
-                print '      - {} kw    {:0>2}:00 - {:0>2}:00'.format(pred, idx,
-                                                                   idx + 1)
+                print '      - {} kw    {:0>2}:00 - {:0>2}:00'.format(
+                    pred, idx, idx + 1)
 
 
 class Past():
@@ -396,7 +396,7 @@ class Future(Past):
                 format_date(end_date)))
 
         logger.info(message)
-        informam (message)
+        informam(message)
 
     # todo -> add correctional factors
     def project_past_to_future(self):
@@ -439,7 +439,7 @@ class Future(Past):
                                       past_day_localized)
 
             if not dia_passat:
-                informam (" - Estimation not found for {} --> {}".format(
+                informam(" - Estimation not found for {} --> {}".format(
                     format_date(dia), format_date(past_day)))
                 dia += un_dia
                 continue
@@ -458,7 +458,7 @@ class Future(Past):
                     dia, mesures_dia_passat.total_consumption,
                     mesures_dia_passat.measures))
 
-            informam (missatge)
+            informam(missatge)
 
             logger.info(missatge)
 
