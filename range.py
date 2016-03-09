@@ -54,6 +54,15 @@ def format_negreta(entrada):
 def format_verd(entrada):
     return colored(entrada, "green")
 
+def format_vermell(entrada):
+    return colored(entrada, "red")
+
+def format_sign(entrada):
+    if entrada>0:
+        return format_verd(entrada)
+    else:
+        return format_vermell(entrada)
+
 
 def format_secundari(entrada):
     return colored(entrada, 'grey')
@@ -274,12 +283,12 @@ class Prediction():
 
                 try:
                     correction_global = params[2]
-                    message_global = ",global"
+                    message_global = ", global"
                 except:
                     correction_global = False
                     message_global = ""
 
-        print " - '{}' ({}: {} {})".format(factor_name, correction_type, correction_what, message_global)
+        print " - '{}' ({}: {}{})".format(factor_name, correction_type, correction_what, message_global)
 
         # Do the job!
         def x(correction_type):
@@ -344,6 +353,9 @@ class Prediction():
             ##print day, sum(values[1]), values
             self.print_day_summary(day, values)
             print ""
+
+        if self.correction_apply:
+            print "   // Applied Margins of '{}' and '{}' global".format( format_sign(self.correction_fixed), format_sign(self.correction_fixed_global))
 
     def print_day_summary(self, day, values):
         print '   + {} kw {}'.format(self.get_final_amount(values[0]),
