@@ -204,6 +204,12 @@ class Prediction():
                 past = bisect.bisect(self.past_cups, cups)
                 future = Future(past, datetime(2016, 10, 25),
                                 datetime(2016, 10, 27))
+
+                # Poor performance.. needed to change Past to dicts!
+                #past_cups_2process = [ cups
+                #          for cups in self.past_cups[0]
+                #          if cups == ]
+
         else:
             message = (
                 "\nStart prediction for all Past CUPS bewteen {} - {}".format(
@@ -521,7 +527,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 100
+__NUMBER__ = 10
 __info__ = False
 __timer__ = True
 
@@ -536,7 +542,10 @@ cups_list = ["ES0031406178012015XD0F"]
 
 cups_list = None
 
-prediction.predict(datetime(2016, 12, 29), datetime(2016, 12, 31), cups_list)
+date_start = datetime(2016, 12, 29)
+date_end = datetime(2016, 12, 31)
+
+prediction.predict(date_start, date_end, cups_list)
 
 prediction.view_hourly_detail()
 
