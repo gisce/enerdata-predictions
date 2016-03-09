@@ -133,7 +133,6 @@ class Reporting ():
 
         print valors+"],"
 
-
     def dump_html(self, file):
 
         html_content = """
