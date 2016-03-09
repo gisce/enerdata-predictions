@@ -311,11 +311,7 @@ class Prediction():
         print "Applying correctional factors"
         self.apply_correction("Set 15% contingency margin", ["increase_percent", "15"] )
 
-        #self.apply_correction("Discount 15%", ["increase_percent", "-15"] )
-
-        #self.apply_correction("Duplicate", ["increase_percent", "100", "global"] )
-
-        self.apply_correction("The half (including margins)", ["increase_percent", "-50", "global"] )
+        self.apply_correction("Set 15% discount (including margins)", ["increase_percent", "-15", "global"] )
 
 
         #self.apply_correction("Name", ["filter", "region"] )
