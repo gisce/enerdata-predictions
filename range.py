@@ -242,6 +242,50 @@ class Prediction():
 
         print message + "\n"
 
+    def apply_correction_increase(self, percentatge):
+        # todo :: increase Prediction profiles instead just the total amount!
+        return float(float(self.total_consumption) * (1 + (float(percentatge)/100)))
+
+    def apply_correction(self, factor_name, params=None):
+        correction_type, correction_what = None, None
+        if params:
+            if len(params)>0:
+                correction_type=params[0]
+                try:
+                    correction_what=params[1]
+                except:
+                    correction_what=None
+
+        print " - '{}' ({}: {})".format(factor_name, correction_type, correction_what)
+
+        # Do the job!
+        def x(correction_type):
+            return {
+                'increase_percent': self.apply_correction_increase(correction_what),
+                'filter': None
+
+            }.get(correction_type, None)
+
+        print "    - Result: {}".format( x(correction_type) )
+
+
+
+
+
+    def apply_correctional_factors (self):
+        if __timer__:
+            performance_start()
+
+        print "Applying correctional factors"
+        self.apply_correction("Set contingency margin", ["increase_percent", "5"] )
+        #self.apply_correction("Name", ["filter", "region"] )
+
+        if __timer__:
+            performance_stop()
+            performance_summary()
+
+        print "\n"
+
     def view_hourly_detail(self):
         self.hourly_detail = True
 
@@ -527,7 +571,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 10
+__NUMBER__ = 2
 __info__ = False
 __timer__ = True
 
@@ -547,7 +591,9 @@ date_end = datetime(2016, 12, 31)
 
 prediction.predict(date_start, date_end, cups_list)
 
-prediction.view_hourly_detail()
+prediction.apply_correctional_factors()
+
+#prediction.view_hourly_detail()
 
 prediction.summarize()
 
