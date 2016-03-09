@@ -13,6 +13,8 @@ from enerdata.profiles.profile import Profile
 from termcolor import colored
 from one_year_ago.one_year_ago import *
 
+
+
 fitx = 'lectures.txt'
 __NUMBER__ = None
 __info__ = None
@@ -73,6 +75,171 @@ def format_secundari(entrada):
 def informam(entrada):
     if __info__:
         print(entrada)
+
+
+
+class Reporting ():
+
+    path = './reports/'
+    file_name = 'prediction.html'
+
+    def create_html(self):
+        file = self.create_file("prediction.html")
+        self.dump_html(file)
+        file.close()
+
+    def create_tsv(self, prediction):
+        file = self.create_file("data.tsv")
+        self.dump_tsv(file, prediction)
+        self.dump_array(file, prediction)
+        file.close()
+
+
+    def create_file(self, file_name=None):
+        if file_name:
+            self.file_name = file_name
+        try:
+            file = open(self.path + self.file_name,'w')   # Trying to create a new file or open one
+            return file
+
+        except:
+            print('HTML creation failed')
+            exit(0)
+
+    def dump_tsv (self,file, prediction):
+        print >>file, "hour\tvalue"
+
+        for day in prediction.days_to_predict:
+            day2print = day
+            day = day.toordinal()
+            values = prediction.predictions_day_by_hour[day]
+
+            for idx, pred in enumerate(values[1]):
+                print >>file, '{}-{:0>2}:00\t{}'.format(format_date(day2print),
+                    idx, prediction.get_final_amount(pred))
+
+    def dump_array (self,file, prediction):
+        valors = "valors = ["
+
+        for day in prediction.days_to_predict:
+            day2print = day
+            day = day.toordinal()
+            values = prediction.predictions_day_by_hour[day]
+
+            for idx, pred in enumerate(values[1]):
+
+                valors += '[{}, {}, {}, {}, {}], '.format(
+                    day2print.year, day2print.month, day2print.day, idx, prediction.get_final_amount(pred))
+
+        print valors+"],"
+
+
+    def dump_html(self, file):
+
+        html_content = """
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatDate = d3.time.format("%d-%b-%y");
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var line = d3.svg.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.value); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv("data.tsv", type, function(error, data) {
+  if (error) throw error;
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.value; }));
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Price ($)");
+
+  svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+});
+
+function type(d) {
+  d.date = formatDate.parse(d.date);
+  d.value = +d.value;
+  return d;
+}
+
+</script>
+
+
+
+
+        """
+
+        print >>file, html_content
+
 
 
 class Prediction():
@@ -655,3 +822,12 @@ prediction.apply_correctional_factors()
 prediction.summarize()
 
 #print prediction.future_cups[0].total_consumption
+
+
+report = Reporting()
+
+report.create_html()
+
+report.create_tsv(prediction)
+
+
