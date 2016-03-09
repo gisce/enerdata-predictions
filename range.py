@@ -82,6 +82,7 @@ class Prediction():
 
     correction_apply = False
     correction_fixed = 0
+    correction_fixed_global = 0
 
     def __init__(self):
         pass
@@ -249,11 +250,17 @@ class Prediction():
 
     # for performance reasons just set the fixed amount on the object, and assume that
     # when the data will be consumed the fixed correction will be applied in real-time
-    def apply_correction_increase(self, percentatge):
+    def apply_correction_increase(self, percentatge, is_global=None):
         # todo :: increase Prediction profiles instead just the total amount!
         self.correction_apply = True
-        self.correction_fixed = 1 + float(percentatge)/100
-        return "Total {} kw  (original {} kw)".format( float(float(self.total_consumption) * (1 + (float(percentatge)/100))), self.total_consumption)
+
+        previous_amount = self.get_final_amount(self.total_consumption)
+        if is_global:
+            self.correction_fixed_global += float(percentatge)/100
+        else:
+            self.correction_fixed += float(percentatge)/100
+
+        return "Total {} kw  (previous {} kw)".format( float(self.get_final_amount(self.total_consumption)), previous_amount)
 
     def apply_correction(self, factor_name, params=None):
         correction_type, correction_what = None, None
@@ -265,12 +272,19 @@ class Prediction():
                 except:
                     correction_what=None
 
-        print " - '{}' ({}: {})".format(factor_name, correction_type, correction_what)
+                try:
+                    correction_global = params[2]
+                    message_global = ",global"
+                except:
+                    correction_global = False
+                    message_global = ""
+
+        print " - '{}' ({}: {} {})".format(factor_name, correction_type, correction_what, message_global)
 
         # Do the job!
         def x(correction_type):
             return {
-                'increase_percent': self.apply_correction_increase(correction_what),
+                'increase_percent': self.apply_correction_increase(correction_what, correction_global),
                 'filter': None
 
             }.get(correction_type, None)
@@ -279,6 +293,15 @@ class Prediction():
 
 
 
+    # apply static corrections to a value
+    def get_final_amount(self, value):
+        if self.correction_apply:
+            value_corrected = float(1 + self.correction_fixed) * float(value)
+
+            # increase the corrected value with the global fixed correction
+            value_corrected_global = float(1 + self.correction_fixed_global) * float(value_corrected)
+            return value_corrected_global
+        return value
 
 
     def apply_correctional_factors (self):
@@ -286,7 +309,15 @@ class Prediction():
             performance_start()
 
         print "Applying correctional factors"
-        self.apply_correction("Set contingency margin", ["increase_percent", "5"] )
+        self.apply_correction("Set 15% contingency margin", ["increase_percent", "15"] )
+
+        #self.apply_correction("Discount 15%", ["increase_percent", "-15"] )
+
+        #self.apply_correction("Duplicate", ["increase_percent", "100", "global"] )
+
+        self.apply_correction("The half (including margins)", ["increase_percent", "-50", "global"] )
+
+
         #self.apply_correction("Name", ["filter", "region"] )
 
         if __timer__:
@@ -314,12 +345,6 @@ class Prediction():
             ##print day, sum(values[1]), values
             self.print_day_summary(day, values)
             print ""
-
-    # apply static corrections to a value
-    def get_final_amount(self, value):
-        if self.correction_apply:
-            return float(self.correction_fixed) * float(value)
-        return value
 
     def print_day_summary(self, day, values):
         print '   + {} kw {}'.format(self.get_final_amount(values[0]),
