@@ -1,5 +1,7 @@
 #/usr/bin/python
 
+from __future__ import division
+
 import bisect
 import sys
 from csv import DictReader
@@ -77,6 +79,9 @@ class Prediction():
     )  # dict of list { day.toordinal(): [ #list day_consumption, array of hours[] }
 
     hourly_detail = False
+
+    correction_apply = False
+    correction_fixed = 0
 
     def __init__(self):
         pass
@@ -242,9 +247,13 @@ class Prediction():
 
         print message + "\n"
 
+    # for performance reasons just set the fixed amount on the object, and assume that
+    # when the data will be consumed the fixed correction will be applied in real-time
     def apply_correction_increase(self, percentatge):
         # todo :: increase Prediction profiles instead just the total amount!
-        return float(float(self.total_consumption) * (1 + (float(percentatge)/100)))
+        self.correction_apply = True
+        self.correction_fixed = 1 + float(percentatge)/100
+        return "Total {} kw  (original {} kw)".format( float(float(self.total_consumption) * (1 + (float(percentatge)/100))), self.total_consumption)
 
     def apply_correction(self, factor_name, params=None):
         correction_type, correction_what = None, None
@@ -295,7 +304,7 @@ class Prediction():
     def summarize(self):
         print format_negreta("PREDICTION SUMMARY"), "\n"
         print "  ", format_verd("{} kw".format(
-            self.total_consumption)), "from {} to {} [{} days]\n".format(
+            self.get_final_amount(self.total_consumption))), "from {} to {} [{} days]\n".format(
                 format_date(self.start_date), format_date(self.end_date),
                 self.days_count)
 
@@ -306,13 +315,19 @@ class Prediction():
             self.print_day_summary(day, values)
             print ""
 
+    # apply static corrections to a value
+    def get_final_amount(self, value):
+        if self.correction_apply:
+            return float(self.correction_fixed) * float(value)
+        return value
+
     def print_day_summary(self, day, values):
-        print '   + {} kw {}'.format(values[0],
+        print '   + {} kw {}'.format(self.get_final_amount(values[0]),
                                      format_date(date.fromordinal(day)))
         if self.hourly_detail:
             for idx, pred in enumerate(values[1]):
                 print '      - {} kw    {:0>2}:00 - {:0>2}:00'.format(
-                    pred, idx, idx + 1)
+                    self.get_final_amount(pred), idx, idx + 1)
 
 
 class Past():
