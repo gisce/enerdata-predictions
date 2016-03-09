@@ -54,11 +54,13 @@ def format_negreta(entrada):
 def format_verd(entrada):
     return colored(entrada, "green")
 
+
 def format_vermell(entrada):
     return colored(entrada, "red")
 
+
 def format_sign(entrada):
-    if entrada>0:
+    if entrada > 0:
         return format_verd(entrada)
     else:
         return format_vermell(entrada)
@@ -265,21 +267,23 @@ class Prediction():
 
         previous_amount = self.get_final_amount(self.total_consumption)
         if is_global:
-            self.correction_fixed_global += float(percentatge)/100
+            self.correction_fixed_global += float(percentatge) / 100
         else:
-            self.correction_fixed += float(percentatge)/100
+            self.correction_fixed += float(percentatge) / 100
 
-        return "Total {} kw  (previous {} kw)".format( float(self.get_final_amount(self.total_consumption)), previous_amount)
+        return "Total {} kw  (previous {} kw)".format(
+            float(self.get_final_amount(self.total_consumption)),
+            previous_amount)
 
     def apply_correction(self, factor_name, params=None):
         correction_type, correction_what = None, None
         if params:
-            if len(params)>0:
-                correction_type=params[0]
+            if len(params) > 0:
+                correction_type = params[0]
                 try:
-                    correction_what=params[1]
+                    correction_what = params[1]
                 except:
-                    correction_what=None
+                    correction_what = None
 
                 try:
                     correction_global = params[2]
@@ -288,19 +292,17 @@ class Prediction():
                     correction_global = False
                     message_global = ""
 
-        print " - '{}' ({}: {}{})".format(factor_name, correction_type, correction_what, message_global)
+        print " - '{}' ({}: {}{})".format(factor_name, correction_type,
+                                          correction_what, message_global)
 
         # Do the job!
-        def x(correction_type):
-            return {
-                'increase_percent': self.apply_correction_increase(correction_what, correction_global),
-                'filter': None
+        type_of_correction = {
+            'increase_percent':
+            self.apply_correction_increase(correction_what, correction_global),
+            'filter': None
+        }.get(correction_type, None)
 
-            }.get(correction_type, None)
-
-        print "    - Result: {}".format( x(correction_type) )
-
-
+        print "    - Result: {}".format(type_of_correction)
 
     # apply static corrections to a value
     def get_final_amount(self, value):
@@ -308,23 +310,24 @@ class Prediction():
             value_corrected = float(1 + self.correction_fixed) * float(value)
 
             # increase the corrected value with the global fixed correction
-            value_corrected_global = float(1 + self.correction_fixed_global) * float(value_corrected)
+            value_corrected_global = float(
+                1 + self.correction_fixed_global) * float(value_corrected)
             return value_corrected_global
         return value
 
-
-    def apply_correctional_factors (self):
+    def apply_correctional_factors(self):
         if __timer__:
             performance_start()
 
         print "Applying correctional factors"
-        self.apply_correction("Set 15% contingency margin", ["increase_percent", "15"] )
+        self.apply_correction("Set 15% contingency margin",
+                              ["increase_percent", "15"])
         #self.apply_correction("Discount 15%", ["increase_percent", "-15"] )
 
         #self.apply_correction("Duplicate", ["increase_percent", "100", "global"] )
 
-        self.apply_correction("The half (including margins)", ["increase_percent", "-50", "global"] )
-
+        self.apply_correction("The half (including margins)",
+                              ["increase_percent", "-50", "global"])
 
         #self.apply_correction("Name", ["filter", "region"] )
 
@@ -342,8 +345,8 @@ class Prediction():
 
     def summarize(self):
         print format_negreta("PREDICTION SUMMARY"), "\n"
-        print "  ", format_verd("{} kw".format(
-            self.get_final_amount(self.total_consumption))), "from {} to {} [{} days]\n".format(
+        print "  ", format_verd("{} kw".format(self.get_final_amount(
+            self.total_consumption))), "from {} to {} [{} days]\n".format(
                 format_date(self.start_date), format_date(self.end_date),
                 self.days_count)
 
@@ -355,11 +358,14 @@ class Prediction():
             print ""
 
         if self.correction_apply:
-            print "   // Applied Margins of '{}' and '{}' global".format( format_sign(self.correction_fixed), format_sign(self.correction_fixed_global))
+            print "   // Applied Margins of '{}%' and '{}%' global".format(
+                format_sign(self.correction_fixed),
+                format_sign(self.correction_fixed_global))
 
     def print_day_summary(self, day, values):
-        print '   + {} kw {}'.format(self.get_final_amount(values[0]),
-                                     format_date(date.fromordinal(day)))
+        print '   + {} kw {}'.format(
+            self.get_final_amount(values[0]),
+            format_date(date.fromordinal(day)))
         if self.hourly_detail:
             for idx, pred in enumerate(values[1]):
                 print '      - {} kw    {:0>2}:00 - {:0>2}:00'.format(
