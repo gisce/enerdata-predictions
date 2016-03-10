@@ -90,9 +90,27 @@ class Reporting ():
 
     def create_tsv(self, prediction):
         file = self.create_file("data.tsv")
+
+
         self.dump_tsv(file, prediction)
+
+
         self.dump_array(file, prediction)
         file.close()
+
+
+
+    def create_csv(self, prediction):
+        file_pred = self.create_file("pred.csv")
+        file_past = self.create_file("past.csv")
+
+        # Line
+        #self.dump_tsv(file_pred, prediction)
+
+        self.dump_array(file_pred, file_past, prediction)
+
+        file_pred.close()
+        file_past.close()
 
 
     def create_file(self, file_name=None):
@@ -118,8 +136,10 @@ class Reporting ():
                 print >>file, '{}-{:0>2}:00\t{}'.format(format_date(day2print),
                     idx, prediction.get_final_amount(pred))
 
-    def dump_array (self,file, prediction):
-        valors = "valors = ["
+    def dump_array (self,file_pred, file_past, prediction):
+        header = "date;value"
+        print >>file_pred, header
+        print >>file_past, header
 
         for day in prediction.days_to_predict:
             day2print = day
@@ -127,11 +147,12 @@ class Reporting ():
             values = prediction.predictions_day_by_hour[day]
 
             for idx, pred in enumerate(values[1]):
-
-                valors += '[{}, {}, {}, {}, {}], '.format(
+                print >>file_pred, '{};{};{};{};{}'.format(
                     day2print.year, day2print.month, day2print.day, idx, prediction.get_final_amount(pred))
+                print >>file_past, '{};{};{};{};{}'.format(
+                    day2print.year, day2print.month, day2print.day, idx, pred)
 
-        print valors+"],"
+
 
     def dump_html(self, file):
 
@@ -309,7 +330,7 @@ class Prediction():
                     print colored("[!] ERROR", 'red'), " :: {} {}\n".format(
                         row, sys.exc_info())
 
-                    raise
+                    continue
             else:
                 print colored(
                     "[!] WARNING",
@@ -492,8 +513,8 @@ class Prediction():
 
         #self.apply_correction("Duplicate", ["increase_percent", "100", "global"] )
 
-        self.apply_correction("The half (including margins)",
-                              ["increase_percent", "-50", "global"])
+        #self.apply_correction("The half (including margins)",
+        #                      ["increase_percent", "-50", "global"])
 
         #self.apply_correction("Name", ["filter", "region"] )
 
@@ -794,7 +815,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 1000
+__NUMBER__ = 100
 __info__ = False
 __timer__ = True
 
@@ -827,6 +848,6 @@ report = Reporting()
 
 report.create_html()
 
-report.create_tsv(prediction)
+report.create_csv(prediction)
 
 
