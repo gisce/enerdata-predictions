@@ -1,5 +1,7 @@
 #/usr/bin/python
 
+from __future__ import division
+
 import bisect
 import sys
 from csv import DictReader
@@ -53,6 +55,17 @@ def format_verd(entrada):
     return colored(entrada, "green")
 
 
+def format_vermell(entrada):
+    return colored(entrada, "red")
+
+
+def format_sign(entrada):
+    if entrada > 0:
+        return format_verd(entrada)
+    else:
+        return format_vermell(entrada)
+
+
 def format_secundari(entrada):
     return colored(entrada, 'grey')
 
@@ -77,6 +90,10 @@ class Prediction():
     )  # dict of list { day.toordinal(): [ #list day_consumption, array of hours[] }
 
     hourly_detail = False
+
+    correction_apply = False
+    correction_fixed = 0
+    correction_fixed_global = 0
 
     def __init__(self):
         pass
@@ -204,6 +221,12 @@ class Prediction():
                 past = bisect.bisect(self.past_cups, cups)
                 future = Future(past, datetime(2016, 10, 25),
                                 datetime(2016, 10, 27))
+
+                # Poor performance.. needed to change Past to dicts!
+                #past_cups_2process = [ cups
+                #          for cups in self.past_cups[0]
+                #          if cups == ]
+
         else:
             message = (
                 "\nStart prediction for all Past CUPS bewteen {} - {}".format(
@@ -236,6 +259,84 @@ class Prediction():
 
         print message + "\n"
 
+    # for performance reasons just set the fixed amount on the object, and assume that
+    # when the data will be consumed the fixed correction will be applied in real-time
+    def apply_correction_increase(self, percentatge, is_global=None):
+        # todo :: increase Prediction profiles instead just the total amount!
+        self.correction_apply = True
+
+        previous_amount = self.get_final_amount(self.total_consumption)
+        if is_global:
+            self.correction_fixed_global += float(percentatge) / 100
+        else:
+            self.correction_fixed += float(percentatge) / 100
+
+        return "Total {} kw  (previous {} kw)".format(
+            float(self.get_final_amount(self.total_consumption)),
+            previous_amount)
+
+    def apply_correction(self, factor_name, params=None):
+        correction_type, correction_what = None, None
+        if params:
+            if len(params) > 0:
+                correction_type = params[0]
+                try:
+                    correction_what = params[1]
+                except:
+                    correction_what = None
+
+                try:
+                    correction_global = params[2]
+                    message_global = ", global"
+                except:
+                    correction_global = False
+                    message_global = ""
+
+        print " - '{}' ({}: {}{})".format(factor_name, correction_type,
+                                          correction_what, message_global)
+
+        # Do the job!
+        type_of_correction = {
+            'increase_percent':
+            self.apply_correction_increase(correction_what, correction_global),
+            'filter': None
+        }.get(correction_type, None)
+
+        print "    - Result: {}".format(type_of_correction)
+
+    # apply static corrections to a value
+    def get_final_amount(self, value):
+        if self.correction_apply:
+            value_corrected = float(1 + self.correction_fixed) * float(value)
+
+            # increase the corrected value with the global fixed correction
+            value_corrected_global = float(
+                1 + self.correction_fixed_global) * float(value_corrected)
+            return value_corrected_global
+        return value
+
+    def apply_correctional_factors(self):
+        if __timer__:
+            performance_start()
+
+        print "Applying correctional factors"
+        self.apply_correction("Set 15% contingency margin",
+                              ["increase_percent", "15"])
+        #self.apply_correction("Discount 15%", ["increase_percent", "-15"] )
+
+        #self.apply_correction("Duplicate", ["increase_percent", "100", "global"] )
+
+        self.apply_correction("The half (including margins)",
+                              ["increase_percent", "-50", "global"])
+
+        #self.apply_correction("Name", ["filter", "region"] )
+
+        if __timer__:
+            performance_stop()
+            performance_summary()
+
+        print "\n"
+
     def view_hourly_detail(self):
         self.hourly_detail = True
 
@@ -244,8 +345,8 @@ class Prediction():
 
     def summarize(self):
         print format_negreta("PREDICTION SUMMARY"), "\n"
-        print "  ", format_verd("{} kw".format(
-            self.total_consumption)), "from {} to {} [{} days]\n".format(
+        print "  ", format_verd("{} kw".format(self.get_final_amount(
+            self.total_consumption))), "from {} to {} [{} days]\n".format(
                 format_date(self.start_date), format_date(self.end_date),
                 self.days_count)
 
@@ -256,13 +357,19 @@ class Prediction():
             self.print_day_summary(day, values)
             print ""
 
+        if self.correction_apply:
+            print "   // Applied Margins of '{}%' and '{}%' global".format(
+                format_sign(self.correction_fixed),
+                format_sign(self.correction_fixed_global))
+
     def print_day_summary(self, day, values):
-        print '   + {} kw {}'.format(values[0],
-                                     format_date(date.fromordinal(day)))
+        print '   + {} kw {}'.format(
+            self.get_final_amount(values[0]),
+            format_date(date.fromordinal(day)))
         if self.hourly_detail:
             for idx, pred in enumerate(values[1]):
                 print '      - {} kw    {:0>2}:00 - {:0>2}:00'.format(
-                    pred, idx, idx + 1)
+                    self.get_final_amount(pred), idx, idx + 1)
 
 
 class Past():
@@ -521,7 +628,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 100
+__NUMBER__ = 2
 __info__ = False
 __timer__ = True
 
@@ -536,9 +643,14 @@ cups_list = ["ES0031406178012015XD0F"]
 
 cups_list = None
 
-prediction.predict(datetime(2016, 12, 29), datetime(2016, 12, 31), cups_list)
+date_start = datetime(2016, 12, 29)
+date_end = datetime(2016, 12, 31)
 
-prediction.view_hourly_detail()
+prediction.predict(date_start, date_end, cups_list)
+
+prediction.apply_correctional_factors()
+
+#prediction.view_hourly_detail()
 
 prediction.summarize()
 
