@@ -794,7 +794,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 2
+__NUMBER__ = 1000
 __info__ = False
 __timer__ = True
 
