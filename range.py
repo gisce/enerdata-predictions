@@ -13,6 +13,9 @@ from enerdata.profiles.profile import Profile
 from termcolor import colored
 from one_year_ago.one_year_ago import *
 
+import os, subprocess
+
+
 fitx = 'lectures.txt'
 __NUMBER__ = None
 __info__ = None
@@ -73,6 +76,197 @@ def format_secundari(entrada):
 def informam(entrada):
     if __info__:
         print(entrada)
+
+
+
+class Reporting ():
+
+
+    file_name = 'report.html'
+    base_path = 'reports/'
+    path = ''
+    data_set = ''
+
+
+    def __init__(self):
+        self.data_set = datetime.today().strftime('%Y%m%d%H%M')
+        self.path += self.base_path + "/hist/"+ self.data_set + "/"
+        self.ensure_dir(self.path)
+
+    def ensure_dir(self,f):
+        d = os.path.dirname(f)
+        if not os.path.exists(d):
+            os.makedirs(d)
+
+    def view_on_browser(self):
+        pwd=os.path.dirname(os.path.abspath(__file__)) + "/"
+
+        url =  'file:///' + pwd + self.base_path + self.file_name + u'?dataset=' + self.data_set
+        print url
+        subprocess.check_call(["/usr/bin/firefox", url])
+
+
+    def create_csv(self, prediction):
+        file_pred = self.create_file("pred.csv")
+        file_past = self.create_file("past.csv")
+
+        # Line
+        #self.dump_tsv(file_pred, prediction)
+
+        self.dump_array(file_pred, file_past, prediction)
+
+        file_pred.close()
+        file_past.close()
+
+
+    def create_file(self, file_name=None):
+        file=self.file_name
+        if file_name:
+            file = file_name
+        try:
+            file = open(self.path + file,'w')   # Trying to create a new file or open one
+            return file
+
+        except:
+            print('HTML creation failed')
+            exit(0)
+
+    def dump_tsv (self,file, prediction):
+        print >>file, "hour\tvalue"
+
+        for day in prediction.days_to_predict:
+            day2print = day
+            day = day.toordinal()
+            values = prediction.predictions_day_by_hour[day]
+
+            for idx, pred in enumerate(values[1]):
+                print >>file, '{}-{:0>2}:00\t{}'.format(format_date(day2print),
+                    idx, prediction.get_final_amount(pred))
+
+    def dump_array (self,file_pred, file_past, prediction):
+        header = "date;value"
+        print >>file_pred, header
+        print >>file_past, header
+
+        for day in prediction.days_to_predict:
+            day2print = day
+            day = day.toordinal()
+            values = prediction.predictions_day_by_hour[day]
+
+            for idx, pred in enumerate(values[1]):
+                print >>file_pred, '{};{};{};{};{}'.format(
+                    day2print.year, day2print.month, day2print.day, idx, prediction.get_final_amount(pred))
+                print >>file_past, '{};{};{};{};{}'.format(
+                    day2print.year, day2print.month, day2print.day, idx, pred)
+
+
+
+    def dump_html(self, file):
+
+        html_content = """
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatDate = d3.time.format("%d-%b-%y");
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var line = d3.svg.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.value); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv("data.tsv", type, function(error, data) {
+  if (error) throw error;
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.value; }));
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Price ($)");
+
+  svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+});
+
+function type(d) {
+  d.date = formatDate.parse(d.date);
+  d.value = +d.value;
+  return d;
+}
+
+</script>
+
+
+
+
+        """
+
+        print >>file, html_content
+
 
 
 class Prediction():
@@ -143,7 +337,7 @@ class Prediction():
                     print colored("[!] ERROR", 'red'), " :: {} {}\n".format(
                         row, sys.exc_info())
 
-                    raise
+                    continue
             else:
                 print colored(
                     "[!] WARNING",
@@ -326,8 +520,8 @@ class Prediction():
 
         #self.apply_correction("Duplicate", ["increase_percent", "100", "global"] )
 
-        self.apply_correction("The half (including margins)",
-                              ["increase_percent", "-50", "global"])
+        #self.apply_correction("The half (including margins)",
+        #                      ["increase_percent", "-50", "global"])
 
         #self.apply_correction("Name", ["filter", "region"] )
 
@@ -628,7 +822,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 2
+__NUMBER__ = 100
 __info__ = False
 __timer__ = True
 
@@ -655,3 +849,10 @@ prediction.apply_correctional_factors()
 prediction.summarize()
 
 #print prediction.future_cups[0].total_consumption
+
+
+report = Reporting()
+
+report.create_csv(prediction)
+
+report.view_on_browser()
