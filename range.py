@@ -13,6 +13,7 @@ from enerdata.profiles.profile import Profile
 from termcolor import colored
 from one_year_ago.one_year_ago import *
 
+import os, subprocess
 
 
 fitx = 'lectures.txt'
@@ -80,24 +81,29 @@ def informam(entrada):
 
 class Reporting ():
 
-    path = './reports/'
-    file_name = 'prediction.html'
 
-    def create_html(self):
-        file = self.create_file("prediction.html")
-        self.dump_html(file)
-        file.close()
-
-    def create_tsv(self, prediction):
-        file = self.create_file("data.tsv")
+    file_name = 'report.html'
+    base_path = 'reports/'
+    path = ''
+    data_set = ''
 
 
-        self.dump_tsv(file, prediction)
+    def __init__(self):
+        self.data_set = datetime.today().strftime('%Y%m%d%H%M')
+        self.path += self.base_path + "/hist/"+ self.data_set + "/"
+        self.ensure_dir(self.path)
 
+    def ensure_dir(self,f):
+        d = os.path.dirname(f)
+        if not os.path.exists(d):
+            os.makedirs(d)
 
-        self.dump_array(file, prediction)
-        file.close()
+    def view_on_browser(self):
+        pwd=os.path.dirname(os.path.abspath(__file__)) + "/"
 
+        url =  'file:///' + pwd + self.base_path + self.file_name + u'?dataset=' + self.data_set
+        print url
+        subprocess.check_call(["/usr/bin/firefox", url])
 
 
     def create_csv(self, prediction):
@@ -114,10 +120,11 @@ class Reporting ():
 
 
     def create_file(self, file_name=None):
+        file=self.file_name
         if file_name:
-            self.file_name = file_name
+            file = file_name
         try:
-            file = open(self.path + self.file_name,'w')   # Trying to create a new file or open one
+            file = open(self.path + file,'w')   # Trying to create a new file or open one
             return file
 
         except:
@@ -846,8 +853,6 @@ prediction.summarize()
 
 report = Reporting()
 
-report.create_html()
-
 report.create_csv(prediction)
 
-
+report.view_on_browser()
