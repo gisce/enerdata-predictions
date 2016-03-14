@@ -15,7 +15,7 @@
         svg {
             display: block;
         }
-        html, body, #chart1, svg {
+        html, body, #chart, svg {
             margin: 0px;
             padding: 0px;
             height: 100%;
@@ -28,6 +28,12 @@
 </head>
 
 <body class='with-3d-shadow with-transitions'>
-<div id="chart1"></div>
+<div id="chart"></div>
+
+<script>
+    $(document).ready(function () {
+        create_chart("#chart");
+    });
+</script>
 </body>
 </html>

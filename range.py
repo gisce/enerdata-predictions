@@ -339,6 +339,7 @@ class Prediction():
             float(self.get_final_amount(self.total_consumption)),
             previous_amount)
 
+
     def apply_correction(self, factor_name, params=None):
         correction_type, correction_what = None, None
         if params:
@@ -692,7 +693,7 @@ class Future(Past):
         return OneYearAgo(day).day_year_ago
 
 
-__NUMBER__ = 100
+__NUMBER__ = None
 __info__ = False
 __timer__ = True
 
@@ -707,7 +708,7 @@ cups_list = ["ES0031406178012015XD0F"]
 
 cups_list = None
 
-date_start = datetime(2016, 12, 29)
+date_start = datetime(2016, 12, 01)
 date_end = datetime(2016, 12, 31)
 
 prediction.predict(date_start, date_end, cups_list)
